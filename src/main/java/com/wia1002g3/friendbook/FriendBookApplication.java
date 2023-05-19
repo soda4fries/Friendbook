@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
 @SpringBootApplication
 public class FriendBookApplication {
@@ -15,5 +16,7 @@ public class FriendBookApplication {
     @GetMapping("/")
     public String test(){
         return "hello";
+        
     }
+
 }
