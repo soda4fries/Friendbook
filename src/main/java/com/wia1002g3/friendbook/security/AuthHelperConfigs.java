@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
-public class AuthDataRetriever {
+public class AuthHelperConfigs {
 
     private final UserRepository repository;
     @Bean
