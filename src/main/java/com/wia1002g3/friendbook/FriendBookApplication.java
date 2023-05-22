@@ -18,5 +18,4 @@ public class FriendBookApplication {
         return "hello";
         
     }
-
 }
