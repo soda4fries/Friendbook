@@ -27,6 +27,8 @@ public class UserInfo {
 
     private Object partner;
 
+    //testing
+
 
 
 
