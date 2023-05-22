@@ -1,0 +1,15 @@
+logging:
+  level:
+    '[org.springframework.jdbc.core]': DEBUG
+
+spring:
+  datasource:
+    url: jdbc:postgresql://wia1002ooc7g3db.postgres.database.azure.com:5432/postgres?user=wia1002dbadmin&password=w!a1002db&sslmode=require
+    username: wia1002dbadmin
+    password: w!a1002db
+  sql:
+    init:
+      mode: always
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
