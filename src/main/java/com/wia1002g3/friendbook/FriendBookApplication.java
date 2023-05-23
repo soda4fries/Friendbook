@@ -13,9 +13,5 @@ public class FriendBookApplication {
     public static void main(String[] args) {
         SpringApplication.run(FriendBookApplication.class, args);
     }
-    @GetMapping("/")
-    public String test(){
-        return "hello";
-        
-    }
+
 }
