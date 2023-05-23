@@ -13,24 +13,11 @@ public class UserInfo {
     private String firstName;
     private String lastName;
     private Integer age;
-    private String address; //research geospatial tools
-
+    private String address;
     private String phoneNumber;
-
     private String Gender;
-
     private String Bio;
-
     private String Hobbies;
-
     private String RelationStatus;
-
     private Object partner;
-
-    //testing
-
-
-
-
-
 }

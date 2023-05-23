@@ -25,6 +25,8 @@ public class User implements UserDetails {
     private Integer id;
     private String username;
     private String password;
+    private Integer graphindex;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

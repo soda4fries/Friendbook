@@ -40,7 +40,7 @@ public class AuthenticationService {
                         request.getUsername(), request.getPassword()
                 )
         );
-        var user = userRepository.findByUsername(request.getUsername())
+        User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return AuthenticationResponse.builder()
