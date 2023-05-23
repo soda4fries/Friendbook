@@ -1,23 +1,26 @@
 package com.wia1002g3.friendbook.services;
 
 import com.wia1002g3.friendbook.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 @Service
+@RequiredArgsConstructor
 public class UserServices {
-    private UserRepository repo;
+    private final UserRepository userRepository;
 
     private String ConvertUserIDtoUserName(Integer userID) throws Exception{
-        return repo.findById(userID).orElseThrow(()-> new Exception("User not found")).getUsername();
+        return userRepository.findById(userID).orElseThrow(()-> new Exception("User not found")).getUsername();
     }
 
-    private String[] ConvertUserIDtoUserName(Integer[] userIDs) throws Exception {
+    private String[] ConvertUserIDstoUserNames(Integer[] userIDs) {
         return Arrays.stream(userIDs).
                 map(id -> {
                     try {
-                        return ConvertUserIDtoUserName(userIDs);
+                        return ConvertUserIDtoUserName(id);
                     } catch (Exception e) {
                         return "INVALID_USER";
                     }
