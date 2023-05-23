@@ -15,6 +15,8 @@
         $('#submitButton').click(function() {
             var text1 = $('#text1').val();
             var text2 = $('#text2').val();
+
+            //Compare this to front-end object in mockserver file
             var data = {
                 variable1: text1,
                 variable2: text2
@@ -27,7 +29,7 @@
                 contentType: 'application/json',
                 data: JSON.stringify(data),
                 success: function(response) {
-                    $('#responseContainer').text(response.message);
+                    $('#responseContainer').text(response.message); //see how the random number was ignored as we selected response.message in server response
                 },
                 error: function(xhr, status, error) {
                     console.log('Error:', error);
