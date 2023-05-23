@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send Text to Server</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<input type="text" id="text1" placeholder="Enter Text 1">
+<input type="text" id="text2" placeholder="Enter Text 2">
+<button id="submitButton">Submit</button>
+<div id="responseContainer"></div>
+
+<script>
+    $(document).ready(function() {
+        $('#submitButton').click(function() {
+            var text1 = $('#text1').val();
+            var text2 = $('#text2').val();
+            var data = {
+                variable1: text1,
+                variable2: text2
+            };
+
+            $.ajax({
+                url: '/testing/', // Replace with your actual server URL
+                method: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function(response) {
+                    $('#responseContainer').text(response.message);
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error:', error);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
