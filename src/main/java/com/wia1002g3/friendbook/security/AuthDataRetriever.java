@@ -40,4 +40,10 @@ public class AuthDataRetriever {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+
+    public void Send()
+    {
+        StringBuilder sb = new StringBuilder("wrong");
+        sb.append("");
+    }
 }
