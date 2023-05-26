@@ -1,13 +1,22 @@
 package com.wia1002g3.friendbook.entity;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
+@Entity
+@Data
+@Table
 public class FriendshipGraph {
-    private ArrayList<ArrayList<Integer>> Relationships;
+    @Id
+    private long id;
 
-    FriendshipGraph(){
+    @OneToMany(mappedBy = "parentGraph", cascade = CascadeType.ALL)
+    private ArrayList<UsersFriends> Relationships;
+
+    public FriendshipGraph(){
         Relationships= new ArrayList<>(0);
     }
 
@@ -34,13 +43,11 @@ public class FriendshipGraph {
      * @return adds a new User and returns his id
      */
     public Integer addUser() {
-        Relationships.add(new ArrayList<>());
+        Relationships.add(new UsersFriends());
         return Relationships.size()-1;
     }
 
     public Iterator<Integer> showFriends(Integer UserID) {
         return Relationships.get(UserID).iterator();
     }
-
-
 }

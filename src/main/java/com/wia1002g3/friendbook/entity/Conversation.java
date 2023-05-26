@@ -6,24 +6,17 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 
-@Entity
 @Data
+@Entity
 @RequiredArgsConstructor
 @Table
-public class Post {
-
+public class Conversation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    Integer Id;
-    String Body;
-    String Image;
+    private Integer id;
 
-    @ManyToOne
-    @JoinColumn
-    private UserInfo userInfo;
-
-    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
-    private ArrayList<Notification> notifications;
+    @ManyToMany(mappedBy = "conversations")
+    private ArrayList<UserInfo> userInfos;
 
 
 }

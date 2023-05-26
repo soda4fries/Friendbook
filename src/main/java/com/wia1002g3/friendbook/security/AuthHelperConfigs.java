@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class AuthHelperConfigs {
 
     private final UserRepository repository;
+
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> repository.findByUsername(username)
@@ -31,6 +32,7 @@ public class AuthHelperConfigs {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); //Will change

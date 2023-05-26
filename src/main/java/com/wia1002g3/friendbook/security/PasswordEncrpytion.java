@@ -1,4 +1,5 @@
 package com.wia1002g3.friendbook.security;
+
 import java.nio.charset.StandardCharsets;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;

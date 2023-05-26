@@ -1,23 +1,44 @@
 package com.wia1002g3.friendbook.entity;
 
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
 
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Entity
+@Data
 public class UserInfo {
-    private String firstName;
-    private String lastName;
-    private Integer age;
-    private String address;
-    private String phoneNumber;
-    private String Gender;
-    private String Bio;
-    private String Hobbies;
-    private String RelationStatus;
-    private Object partner;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Integer id;
+
+    @OneToOne(mappedBy = "userInfo")
+    private User user;
+
+    @Transient
+    private ArrayList<Integer> viewedPost;
+
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
+    private ArrayList<Post> posts;
+
+    @ManyToMany
+    @JoinTable(name = "user_conversations",
+            joinColumns = @JoinColumn(name = "user_info_id"),
+            inverseJoinColumns = @JoinColumn(name = "conversation_id"))
+    private ArrayList<Conversation> conversations;
+
+    @ManyToMany(mappedBy = "userInfos")
+    private ArrayList<Community> communities;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_info_id")
+    private ArrayList<Notification> notifications;
 }
