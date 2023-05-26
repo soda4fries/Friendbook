@@ -26,19 +26,4 @@ public class UserInfo {
     @Transient
     private ArrayList<Integer> viewedPost;
 
-    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
-    private ArrayList<Post> posts;
-
-    @ManyToMany
-    @JoinTable(name = "user_conversations",
-            joinColumns = @JoinColumn(name = "user_info_id"),
-            inverseJoinColumns = @JoinColumn(name = "conversation_id"))
-    private ArrayList<Conversation> conversations;
-
-    @ManyToMany(mappedBy = "userInfos")
-    private ArrayList<Community> communities;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_info_id")
-    private ArrayList<Notification> notifications;
 }

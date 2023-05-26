@@ -2,9 +2,13 @@ package com.wia1002g3.friendbook.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 
 @Entity
 @Data
@@ -14,10 +18,11 @@ public class FriendshipGraph {
     private long id;
 
     @OneToMany(mappedBy = "parentGraph", cascade = CascadeType.ALL)
-    private ArrayList<UsersFriends> Relationships;
+    private ArrayList<UsersFriends> relationships;
+
 
     public FriendshipGraph(){
-        Relationships= new ArrayList<>(0);
+        relationships= new ArrayList<>(0);
     }
 
     /**
@@ -27,27 +32,64 @@ public class FriendshipGraph {
      * @return if adding friend was successful
      */
     public boolean addFriend(int UserX, int UserY) {
-        if(UserX> Relationships.size()-1 || UserY> Relationships.size()-1)
+        if(UserX> relationships.size()-1 || UserY> relationships.size()-1)
             return false;
-        Relationships.get(UserX).add(UserY);
+        relationships.get(UserX).add(UserY);
         //Justification
-        Relationships.get(UserX).trimToSize();
-        Relationships.get(UserY).add(UserX);
+        relationships.get(UserX).trimToSize();
+        relationships.get(UserY).add(UserX);
         //Justification
-        Relationships.get(UserY).trimToSize();
+        relationships.get(UserY).trimToSize();
         return true;
     }
 
     /**
      *
-     * @return adds a new User and returns his id
+     * @return adds a new User and returns his graphIndex
      */
     public Integer addUser() {
-        Relationships.add(new UsersFriends());
-        return Relationships.size()-1;
+        relationships.add(new UsersFriends());
+        return relationships.size()-1;
     }
 
     public Iterator<Integer> showFriends(Integer UserID) {
-        return Relationships.get(UserID).iterator();
+        return relationships.get(UserID).iterator();
+    }
+
+    /**
+     * Performs Breadth-First Search (BFS) starting from the given UserID and stores all vertices visited
+     * in each hop in an ArrayList.
+     *
+     * @param userID The graph index of the user to start the BFS from
+     * @return An ArrayList containing all vertices visited in each hop
+     * using boolean instead of hashset as number of edge more than vertices
+     */
+    public ArrayList<ArrayList<Integer>> bfs(int userID) {
+        ArrayList<ArrayList<Integer>> hops = new ArrayList<>();
+        boolean[] visited = new boolean[relationships.size()];
+
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(userID);
+        visited[userID] = true;
+
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            ArrayList<Integer> currentHop = new ArrayList<>(size);
+
+            for (int i = 0; i < size; i++) {
+                int user = queue.poll();
+                currentHop.add(user);
+
+                for (int friend : relationships.get(user)) {
+                    if (!visited[friend]) {
+                        visited[friend] = true;
+                        queue.add(friend);
+                    }
+                }
+            }
+            hops.add(currentHop);
+        }
+
+        return hops;
     }
 }
