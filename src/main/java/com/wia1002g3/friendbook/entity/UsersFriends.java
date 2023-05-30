@@ -9,7 +9,6 @@ import java.util.ArrayList;
 @Entity
 @Data
 @NoArgsConstructor
-@Table
 public class UsersFriends extends ArrayList<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

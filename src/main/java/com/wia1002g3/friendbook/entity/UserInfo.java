@@ -20,7 +20,8 @@ public class UserInfo {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
-    @OneToOne(mappedBy = "userInfo")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Transient
@@ -38,7 +39,6 @@ public class UserInfo {
     @ManyToMany(mappedBy = "userInfos")
     private ArrayList<Community> communities;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_info_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userInfo")
     private ArrayList<Notification> notifications;
 }

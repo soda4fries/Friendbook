@@ -9,7 +9,6 @@ import java.util.ArrayList;
 @Entity
 @Data
 @RequiredArgsConstructor
-@Table
 public class Post {
 
     @Id
@@ -19,11 +18,7 @@ public class Post {
     String Image;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "UserInfo_id")
     private UserInfo userInfo;
-
-    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL)
-    private ArrayList<Notification> notifications;
-
 
 }

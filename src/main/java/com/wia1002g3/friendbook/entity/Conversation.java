@@ -9,7 +9,6 @@ import java.util.ArrayList;
 @Data
 @Entity
 @RequiredArgsConstructor
-@Table
 public class Conversation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

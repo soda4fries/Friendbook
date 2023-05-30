@@ -8,7 +8,6 @@ import java.util.Iterator;
 
 @Entity
 @Data
-@Table
 public class FriendshipGraph {
     @Id
     private long id;

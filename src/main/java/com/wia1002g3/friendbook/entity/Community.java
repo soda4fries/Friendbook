@@ -10,7 +10,6 @@ import java.util.List;
 @Entity
 @Data
 @RequiredArgsConstructor
-@Table
 public class Community {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

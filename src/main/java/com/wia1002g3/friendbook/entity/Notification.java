@@ -8,7 +8,6 @@ import org.springframework.data.relational.core.sql.In;
 @Entity
 @Data
 @RequiredArgsConstructor
-@Table
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -16,4 +15,8 @@ public class Notification {
 
     private String Message;
     private String Type;
+
+    @ManyToOne
+    @JoinColumn(name = "user_info_id")
+    private UserInfo userInfo;
 }
