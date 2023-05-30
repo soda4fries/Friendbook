@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -14,8 +15,13 @@ public class Conversation {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
+    private String conversationName;
+
     @ManyToMany(mappedBy = "conversations")
     private ArrayList<UserInfo> userInfos;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "conversation")
+    List<Message> messages = new ArrayList<>();
 
 
 }

@@ -41,4 +41,8 @@ public class UserInfo {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userInfo")
     private ArrayList<Notification> notifications;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_bio_id")
+    private UserBio userBio;
 }

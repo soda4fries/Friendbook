@@ -15,6 +15,8 @@ public class Community {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String communityName;
+    private String communityInfo;
 
     // Other community properties
 
