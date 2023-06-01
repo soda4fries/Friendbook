@@ -16,12 +16,15 @@ public class FriendshipGraph {
     @Id
     private long id;
 
+    private String graphName;
+
     @OneToMany(mappedBy = "parentGraph", cascade = CascadeType.ALL)
     private ArrayList<UsersFriends> relationships;
 
 
     public FriendshipGraph(){
         relationships= new ArrayList<>(0);
+        this.graphName = graphName;
     }
 
     /**

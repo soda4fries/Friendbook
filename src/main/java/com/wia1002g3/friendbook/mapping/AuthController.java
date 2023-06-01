@@ -6,6 +6,7 @@ import com.wia1002g3.friendbook.security.AuthenticationService;
 import com.wia1002g3.friendbook.security.RegisterRequest;
 import com.wia1002g3.friendbook.security.loginRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,13 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(Authservice.register(request));
+        try {
+            AuthenticationResponse response = Authservice.register(request);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            // Handle the exception and return an error response
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PostMapping("/login")

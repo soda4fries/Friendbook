@@ -17,7 +17,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "userTable")
+@Table(name = "user_Table")
 public class User implements UserDetails {
 
     @Id
@@ -27,7 +27,7 @@ public class User implements UserDetails {
 
     private String username;
     private String password;
-    private Integer graphindex;
+    private Integer graphID;
 
     @Enumerated(EnumType.STRING)
     private Role role;

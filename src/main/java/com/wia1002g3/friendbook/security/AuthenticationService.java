@@ -1,8 +1,8 @@
 package com.wia1002g3.friendbook.security;
 
-import com.wia1002g3.friendbook.entity.Role;
 import com.wia1002g3.friendbook.entity.User;
 import com.wia1002g3.friendbook.repository.UserRepository;
+import com.wia1002g3.friendbook.services.UserServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,19 +19,17 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserServices userServices;
 
     public AuthenticationResponse register(RegisterRequest request) {
-        User user = User.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
-                .build();
-        userRepository.save(user);
-
-        return AuthenticationResponse.builder()
-                .token(jwtService.generateToken(new LinkedHashMap<>(), user))
-                .build();
-
+        try {
+            User user = userServices.createUser(request.getUsername(), request.getPassword());
+            String token = jwtService.generateToken(new LinkedHashMap<>(), user);
+            return new AuthenticationResponse(token);
+        } catch (RuntimeException e) {
+            // Log the exception or handle it appropriately
+            throw new RuntimeException("Failed to register user");
+        }
     }
 
     public AuthenticationResponse login(loginRequest request) {

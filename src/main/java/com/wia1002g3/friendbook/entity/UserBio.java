@@ -2,7 +2,6 @@ package com.wia1002g3.friendbook.entity;
 
 
 import jakarta.persistence.*;
-import org.springframework.data.relational.core.sql.In;
 
 @Entity
 public class UserBio {
@@ -12,4 +11,6 @@ public class UserBio {
 
     @OneToOne(mappedBy = "userBio")
     private UserInfo userInfo;
+
+
 }
