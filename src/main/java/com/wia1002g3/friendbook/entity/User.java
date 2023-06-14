@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import java.util.Collection;
@@ -25,7 +26,6 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-
 
     private String username;
     private String password;
@@ -65,19 +65,19 @@ public class User implements UserDetails {
 
     //UserInfo
     @Transient
-    private ArrayList<Integer> viewedPost;
+    private LinkedList<Integer> viewedPost;
 
 
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private ArrayList<Conversation> conversations;
 
-    private ArrayList<Community> communities;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private ArrayList<Notification> notifications = new ArrayList<>();
 
-    private ArrayList<Notification> notifications;
-
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private ArrayList<Post> posts;
 
+    @ManyToMany(mappedBy = "members")
     private ArrayList<Community> communities;
 
 

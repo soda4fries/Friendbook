@@ -17,8 +17,15 @@ public class Conversation {
 
     private String conversationName;
 
-    private List<User> usersinChat;
+    @ManyToMany
+    @JoinTable(
+            name = "conversation_user",
+            joinColumns = @JoinColumn(name = "conversation_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private ArrayList<User> users;
 
-    private List<Message> allMessages;
+    @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
+    private ArrayList<Message> allMessages;
 
 }

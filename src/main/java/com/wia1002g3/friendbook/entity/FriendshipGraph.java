@@ -14,7 +14,7 @@ import java.util.Queue;
 @Data
 public class FriendshipGraph {
     @Id
-    private long id;
+    private Integer id;
 
     private String graphName;
 

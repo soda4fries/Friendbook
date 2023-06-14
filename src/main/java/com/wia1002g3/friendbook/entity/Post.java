@@ -19,6 +19,16 @@ public class Post {
     private String caption;
     private String ImageBase64;
 
-    private List<User> Likes;
+    @ManyToMany
+    @JoinTable(
+            name = "post_user_like",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private ArrayList<User> likes;
+
+    @ManyToOne
+    @JoinColumn(name = "community_id")
+    private Community community;
 
 }

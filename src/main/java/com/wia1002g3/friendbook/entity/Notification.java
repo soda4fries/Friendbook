@@ -15,4 +15,5 @@ public class Notification {
 
     private String Message;
     private String Type;
+
 }
