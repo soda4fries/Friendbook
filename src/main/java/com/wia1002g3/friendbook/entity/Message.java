@@ -1,14 +1,24 @@
 package com.wia1002g3.friendbook.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
+import java.util.Date;
 
 @Entity
-public class Message {
+@Data
+public class Message implements Comparable<Message> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Integer id;
 
-    @ManyToOne
-            @JoinColumn(name = "conversation_id")
-    Conversation conversation;
+    private String message;
+    private Date timestamp;
+
+    private User sender;
+
+    @Override
+    public int compareTo(Message o) {
+        return this.timestamp.compareTo(o.timestamp);
+    }
 }

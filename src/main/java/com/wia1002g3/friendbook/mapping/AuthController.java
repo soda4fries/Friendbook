@@ -33,4 +33,9 @@ public class AuthController {
         return ResponseEntity.ok(Authservice.login(request));
     }
 
+    @GetMapping("/registerVerify/userNameTaken/{username}")
+    public boolean UserNameTaken(@PathVariable String username){
+        return Authservice.IsUserNameTaken(username);
+    }
+
 }

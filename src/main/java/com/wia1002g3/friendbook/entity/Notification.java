@@ -15,8 +15,4 @@ public class Notification {
 
     private String Message;
     private String Type;
-
-    @ManyToOne
-    @JoinColumn(name = "user_info_id")
-    private UserInfo userInfo;
 }

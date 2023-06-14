@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -45,5 +46,14 @@ public class AuthenticationService {
                 .token(jwtService.generateToken(new LinkedHashMap<>(), user))
                 .build();
 
+    }
+
+    public User getUser(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    public boolean IsUserNameTaken(String username){
+        return userRepository.existsByUsername(username);
     }
 }

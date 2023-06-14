@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -14,11 +15,10 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Integer Id;
-    String Body;
-    String Image;
 
-    @ManyToOne
-    @JoinColumn(name = "UserInfo_id")
-    private UserInfo userInfo;
+    private String caption;
+    private String ImageBase64;
+
+    private List<User> Likes;
 
 }

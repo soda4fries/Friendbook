@@ -18,18 +18,8 @@ public class Community {
     private String communityName;
     private String communityInfo;
 
-    // Other community properties
+    private List<User> userInfos;
 
-    @ManyToMany
-    @JoinTable(name = "community_userinfo",
-            joinColumns = @JoinColumn(name = "community_id"),
-            inverseJoinColumns = @JoinColumn(name = "userinfo_id"))
-    private List<UserInfo> userInfos;
-
-    @ManyToMany
-    @JoinTable(name = "community_post",
-            joinColumns = @JoinColumn(name = "community_id"),
-            inverseJoinColumns = @JoinColumn(name = "post_id"))
     private ArrayList<Post> posts;
 
 }

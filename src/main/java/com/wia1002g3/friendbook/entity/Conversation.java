@@ -17,11 +17,8 @@ public class Conversation {
 
     private String conversationName;
 
-    @ManyToMany(mappedBy = "conversations")
-    private ArrayList<UserInfo> userInfos;
+    private List<User> usersinChat;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "conversation")
-    List<Message> messages = new ArrayList<>();
-
+    private List<Message> allMessages;
 
 }

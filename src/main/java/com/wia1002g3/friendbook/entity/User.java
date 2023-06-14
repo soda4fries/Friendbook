@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Collection;
@@ -31,13 +33,6 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
-    private UserInfo userInfo;
-
-
-
-
 
 
 
@@ -66,4 +61,36 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
+    //UserInfo
+    @Transient
+    private ArrayList<Integer> viewedPost;
+
+
+
+    private ArrayList<Conversation> conversations;
+
+    private ArrayList<Community> communities;
+
+    private ArrayList<Notification> notifications;
+
+
+    private ArrayList<Post> posts;
+
+    private ArrayList<Community> communities;
+
+
+    //userBio
+    private String firstName;
+    private String lastName;
+    private Integer age;
+    private String address;//research geospatial tools
+    private String phoneNumber;
+    private String gender;
+    private String bio;
+    private String hobbies;
+    private String relationStatus;
+    private Object partner;
+
 }

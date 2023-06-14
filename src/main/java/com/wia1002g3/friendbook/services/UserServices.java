@@ -49,5 +49,5 @@ public class UserServices {
         userRepository.save(user);
         friendshipGraphRepository.save(graph);
         return user;
-    };
+    }
 }
