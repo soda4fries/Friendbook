@@ -17,15 +17,9 @@ public class Conversation {
 
     private String conversationName;
 
-    @ManyToMany
-    @JoinTable(
-            name = "conversation_user",
-            joinColumns = @JoinColumn(name = "conversation_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private ArrayList<User> users;
 
-    @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "Conv_id")
     private ArrayList<Message> allMessages;
 
 }

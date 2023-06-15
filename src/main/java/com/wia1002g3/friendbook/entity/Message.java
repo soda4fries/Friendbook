@@ -16,7 +16,7 @@ public class Message implements Comparable<Message> {
     private Date timestamp;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "sender_id")
     private User sender;
 
     @Override

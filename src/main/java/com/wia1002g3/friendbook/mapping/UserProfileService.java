@@ -71,7 +71,6 @@ public class UserProfileService {
         user.setBio(updatedUser.getBio());
         user.setHobbies(updatedUser.getHobbies());
         user.setRelationStatus(updatedUser.getRelationStatus());
-        user.setPartner(updatedUser.getPartner());
 
         // Save the updated user object
         userRepository.save(user);

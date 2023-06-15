@@ -19,15 +19,9 @@ public class Community {
     private String communityName;
     private String communityInfo;
 
-    @ManyToMany
-    @JoinTable(
-            name = "community_member",
-            joinColumns = @JoinColumn(name = "community_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private ArrayList<User> members;
 
-    @OneToMany(mappedBy = "community")
-    private ArrayList<Post> posts;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "community_id")
+    private ArrayList<GroupPost> groupPosts;
 
 }

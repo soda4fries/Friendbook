@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,21 +62,23 @@ public class User implements UserDetails {
     }
 
 
-    //UserInfo
     @Transient
     private LinkedList<Integer> viewedPost;
 
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "user_id")
     private ArrayList<Conversation> conversations;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "user_id")
     private ArrayList<Notification> notifications = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "user_id")
     private ArrayList<Post> posts;
 
-    @ManyToMany(mappedBy = "members")
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "user_id")
     private ArrayList<Community> communities;
 
 
@@ -91,6 +92,5 @@ public class User implements UserDetails {
     private String bio;
     private String hobbies;
     private String relationStatus;
-    private Object partner;
 
 }
