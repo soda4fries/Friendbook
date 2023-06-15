@@ -54,8 +54,8 @@ public class FriendshipGraph {
         return relationships.size()-1;
     }
 
-    public Iterator<Integer> showFriends(Integer UserID) {
-        return relationships.get(UserID).iterator();
+    public ArrayList<Integer> showFriends(Integer UserID) {
+        return relationships.get(UserID);
     }
 
     /**

@@ -4,14 +4,19 @@ import com.wia1002g3.friendbook.entity.Post;
 import com.wia1002g3.friendbook.entity.User;
 import com.wia1002g3.friendbook.repository.PostRepository;
 import com.wia1002g3.friendbook.repository.UserRepository;
+import jakarta.persistence.Transient;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -19,6 +24,7 @@ import java.util.Optional;
 public class HomePageService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     @GetMapping("api/HomePage/GetPost/{id}")
     public ResponseEntity<PostDTO> getPostById(@PathVariable("id") Integer postId) {
@@ -51,10 +57,20 @@ public class HomePageService {
         }
     }
 
+    @PostMapping("api/HomePage/viewedPost/{userId}/{postId}")
+    public ResponseEntity<Boolean> viewedPost(@PathVariable Integer postId, @PathVariable Integer userId) {
+        User user = userRepository.findById(userId).orElseThrow();
+        LinkedList<Integer> viewed = user.getViewedPost();
+        viewed.add(postId);
+        userRepository.save(user);
+        return ResponseEntity.ok(Boolean.TRUE);
+    }
 
-
-
-
-
+    @GetMapping("api/HomePage/GetViewedPost/{userid}/")
+    public ResponseEntity<List<Integer>> getViewedPost(@PathVariable Integer userid) {
+        User user = userRepository.findById(userid).orElseThrow();
+        LinkedList<Integer> viewed = user.getViewedPost();
+        return ResponseEntity.ok(viewed);
+    }
 
 }
