@@ -13,6 +13,7 @@ public class FriendshipGraph {
     @Id
     private Integer id;
 
+    private String graphName;
 
     @OneToMany(mappedBy = "parentGraph", cascade = CascadeType.ALL)
     private ArrayList<UsersFriends> relationships;

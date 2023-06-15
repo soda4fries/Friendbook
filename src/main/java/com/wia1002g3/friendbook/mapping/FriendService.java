@@ -2,6 +2,7 @@ package com.wia1002g3.friendbook.mapping;
 
 import com.wia1002g3.friendbook.entity.FriendshipGraph;
 import com.wia1002g3.friendbook.entity.User;
+import com.wia1002g3.friendbook.repository.FriendshipGraphRepository;
 import com.wia1002g3.friendbook.repository.UserRepository;
 import com.wia1002g3.friendbook.services.FriendshipGraphService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 public class FriendService {
     private final UserRepository userRepository;
     private final FriendshipGraphService friendshipGraphService;
+    private final FriendshipGraphRepository friendshipGraphRepository;
 
 
     @GetMapping("/Friends/GetAllFriends/{userid}")
@@ -51,4 +53,18 @@ public class FriendService {
 
         return ResponseEntity.ok(RelationHops);
     }
+
+    @GetMapping("/Friends/AddFriend/{userid1}/{userid2}")
+    public ResponseEntity<Boolean> getRelations(@PathVariable Integer userid1, @PathVariable Integer userid2) {
+        User user1 = userRepository.findById(userid1).orElseThrow();
+        User user2 = userRepository.findById(userid2).orElseThrow();
+        Integer graphID1 = user1.getGraphID();
+        Integer graphID2 = user2.getGraphID();
+
+        FriendshipGraph graph = friendshipGraphService.getSingletonFriendshipGraph();
+        graph.addFriend(graphID1, graphID2);
+        friendshipGraphRepository.save(graph);
+        return ResponseEntity.ok(Boolean.TRUE);
+    }
+
 }
