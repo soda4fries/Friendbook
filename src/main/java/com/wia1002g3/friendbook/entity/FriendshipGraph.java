@@ -2,11 +2,8 @@ package com.wia1002g3.friendbook.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -16,7 +13,6 @@ public class FriendshipGraph {
     @Id
     private Integer id;
 
-    private String graphName;
 
     @OneToMany(mappedBy = "parentGraph", cascade = CascadeType.ALL)
     private ArrayList<UsersFriends> relationships;
@@ -24,7 +20,6 @@ public class FriendshipGraph {
 
     public FriendshipGraph(){
         relationships= new ArrayList<>(0);
-        this.graphName = graphName;
     }
 
     /**
