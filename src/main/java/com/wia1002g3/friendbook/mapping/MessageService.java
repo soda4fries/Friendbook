@@ -3,14 +3,13 @@ import com.wia1002g3.friendbook.entity.Conversation;
 import com.wia1002g3.friendbook.entity.Message;
 import com.wia1002g3.friendbook.entity.User;
 import com.wia1002g3.friendbook.repository.ConversationRepository;
+import com.wia1002g3.friendbook.repository.MessageRepository;
 import com.wia1002g3.friendbook.repository.UserRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -20,6 +19,7 @@ public class MessageService {
 
     private final UserRepository userRepository;
     private final ConversationRepository conversationRepository;
+    private final MessageRepository messageRepository;
 
     @GetMapping("api/messaging/{userId}/conversations")
     public List<Integer> getUserConversationIds(@PathVariable Integer userId) {
@@ -80,8 +80,32 @@ public class MessageService {
         }
     }
 
+    @PostMapping("/conversations/postMessage/{conversationId}/")
+    public ResponseEntity<String> postMessageToConversation(@PathVariable Integer conversationId, @RequestBody SaveMessageDTO messageDTO) {
+        Conversation conversation = conversationRepository.findById(conversationId)
+                .orElseThrow(() -> new RuntimeException("Conversation not found"));
+
+        User sender = userRepository.findById(messageDTO.getSenderId())
+                .orElseThrow(() -> new RuntimeException("Sender not found"));
+
+        Message message = new Message();
+        message.setMessage(messageDTO.getMessage());
+        message.setTimestamp(new Date());
+        message.setSender(sender);
+
+        Message savedMessage = messageRepository.save(message);
+
+        return ResponseEntity.ok("Saved");
+    }
 
 
+    @Data
+    private class SaveMessageDTO {
 
-
+        private String message;
+        private Integer sender;
+        public Integer getSenderId() {
+            return sender;
+        }
+    }
 }
