@@ -1,4 +1,4 @@
-package com.wia1002g3.friendbook.security;
+package com.wia1002g3.friendbook.DTOs;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class loginRequest {
     private String cred;
-    private String username;
-    private String credtype;
+    private String credType; //CRED_USERNAME
     private String password;
 }

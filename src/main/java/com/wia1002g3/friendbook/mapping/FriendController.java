@@ -1,10 +1,9 @@
 package com.wia1002g3.friendbook.mapping;
 
+import com.wia1002g3.friendbook.DTOs.UserDTO;
 import com.wia1002g3.friendbook.entity.User;
 import com.wia1002g3.friendbook.repository.UserRepository;
 import com.wia1002g3.friendbook.services.FriendsService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +18,7 @@ public class FriendController {
     private final UserRepository userRepository;
     private final FriendsService friendsService;
 
-    @Data
-    @AllArgsConstructor
-    class UserDTO {
-        Integer id;
-        String Username;
-    }
+
 
 
     @GetMapping("/Friends/GetFriendsList/{userid}")

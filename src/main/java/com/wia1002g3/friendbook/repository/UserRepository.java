@@ -13,13 +13,15 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findById(Integer id);
 
-    Optional<User> findByGraphID(Integer id);
-
     ArrayList<User> findAllByUsernameContainingOrFirstNameContainingOrLastNameContaining(String username, String firstName, String lastName);
 
     boolean existsByUsername(String username);
 
     @Query(value = "SELECT u FROM User u WHERE to_tsvector('english', u.bio) @@ to_tsquery('english', :query)", nativeQuery = true)
     ArrayList<User> searchByBio(@Param("query") String query);
+
+    Optional<User> findByEmailOrPhoneNumber(String email, String phoneNumber);
+
+    boolean existsByEmailOrPhoneNumber(String email, String phoneNumber);
 
 }

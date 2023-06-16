@@ -1,11 +1,14 @@
 package com.wia1002g3.friendbook.mapping;
+
+import com.wia1002g3.friendbook.DTOs.CreateGroupRequest;
+import com.wia1002g3.friendbook.DTOs.MessageDTO;
+import com.wia1002g3.friendbook.DTOs.SaveMessageDTO;
 import com.wia1002g3.friendbook.entity.Conversation;
 import com.wia1002g3.friendbook.entity.Message;
 import com.wia1002g3.friendbook.entity.User;
 import com.wia1002g3.friendbook.repository.ConversationRepository;
 import com.wia1002g3.friendbook.repository.MessageRepository;
 import com.wia1002g3.friendbook.repository.UserRepository;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +36,22 @@ public class MessageController {
         userRepository.save(user1);
         userRepository.save(user2);
         conversationRepository.save(newConversation);
+        return true;
+    }
+
+    @PostMapping("api/message/Group/{userid1}/{userid2}")
+    public Boolean startMessage(@RequestBody CreateGroupRequest request) {
+        Conversation newConversation = new Conversation();
+        newConversation.setAllMessages(new ArrayList<>() {});
+        newConversation.setConversationName(request.getGroupName());
+        conversationRepository.save(newConversation);
+        for (Integer memberid : request.getMembers()) {
+            User user = userRepository.findById(memberid).orElseThrow();
+            user.getConversations().add(newConversation);
+            userRepository.save(user);
+        }
+
+
         return true;
     }
 
@@ -82,20 +101,7 @@ public class MessageController {
         return list.subList(startIndex, endIndex);
     }
 
-    @Data
-    public class MessageDTO implements Comparable<MessageDTO> {
-        private Integer messageId;
-        private String message;
-        private Date timestamp;
-        private Integer senderUserId;
-
-        @Override
-        public int compareTo(MessageDTO o) {
-            return this.timestamp.compareTo(o.getTimestamp());
-        }
-    }
-
-    @PostMapping("/conversations/sendMessage/{conversationId}/")
+    @PostMapping("api/messaging/sendMessage/{conversationId}/")
     public ResponseEntity<String> postMessageToConversation(@PathVariable Integer conversationId, @RequestBody SaveMessageDTO messageDTO) {
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new RuntimeException("Conversation not found"));
@@ -107,20 +113,11 @@ public class MessageController {
         message.setMessage(messageDTO.getMessage());
         message.setTimestamp(new Date());
         message.setSender(sender);
-
-        Message savedMessage = messageRepository.save(message);
-
+        conversation.getAllMessages().add(message);
+        messageRepository.save(message);
+        conversationRepository.save(conversation);
         return ResponseEntity.ok("Saved");
     }
 
 
-    @Data
-    private class SaveMessageDTO {
-
-        private String message;
-        private Integer sender;
-        public Integer getSenderId() {
-            return sender;
-        }
-    }
 }

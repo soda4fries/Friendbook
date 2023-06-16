@@ -1,7 +1,11 @@
-package com.wia1002g3.friendbook.security;
+package com.wia1002g3.friendbook.services;
 
+import com.wia1002g3.friendbook.DTOs.AuthenticationResponse;
+import com.wia1002g3.friendbook.DTOs.RegisterRequest;
+import com.wia1002g3.friendbook.DTOs.loginRequest;
 import com.wia1002g3.friendbook.entity.User;
 import com.wia1002g3.friendbook.repository.UserRepository;
+import com.wia1002g3.friendbook.security.JwtService;
 import com.wia1002g3.friendbook.services.UserServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,24 +39,13 @@ public class AuthenticationService {
 
     public AuthenticationResponse login(loginRequest request) {
         String userName;
-        userName =  request.getUsername();
 
-        /*
-        if (request.getCredtype().equals("USERNAME")) {
-            userName =  request.getUsername();
-        }
-
-
-        else {
-
-            Optional<User> userOptional = userRepository.findByEmailOrPhoneNumber(request.getCred());
-            if (userOptional.isEmpty()) {
-                // logic for sending phone or email not registered
-            }
-            User user = userOptional.get();
+        if (request.getCredType().equals("CRED_USERNAME")) {
+            userName = request.getCred();
+        } else {
+            User user = userRepository.findByEmailOrPhoneNumber(request.getCred(), request.getCred()).orElseThrow();
             userName = user.getUsername();
         }
-         */
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -67,11 +59,5 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtService.generateToken(new LinkedHashMap<>(), user))
                 .build();
-
-    }
-
-    public User getUser(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

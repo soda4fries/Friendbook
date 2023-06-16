@@ -3,7 +3,7 @@ package com.wia1002g3.friendbook.services;
 import com.wia1002g3.friendbook.entity.Role;
 import com.wia1002g3.friendbook.entity.User;
 import com.wia1002g3.friendbook.repository.UserRepository;
-import com.wia1002g3.friendbook.security.RegisterRequest;
+import com.wia1002g3.friendbook.DTOs.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -50,9 +50,9 @@ public class UserServices {
                 .lastName(request.getLastName())
                 .gender(request.getGender())
                 .address(request.getAddress())
-                .age(request.getAge())
+                .Birthday(request.getDateOfBirth())
                 .hobbies(getHobbiesAsArrayList(request.getHobbies()))
-                .jobExperiences(getExperianceAsArrayList("Software Engineer at XYZ Corp, Web Developer at ABC Company"))
+                .jobExperiences(getExperianceAsArrayList(request.getJobexperiances()))
                 .build();
         System.out.println("User builder works");
         userRepository.save(user);
@@ -60,6 +60,8 @@ public class UserServices {
         System.out.println("Friendship graph works");
         return user;
     }
+
+
 
     private ArrayList<String> getHobbiesAsArrayList(String hobbies) {
         String[] hobbyArr = hobbies.split(",");

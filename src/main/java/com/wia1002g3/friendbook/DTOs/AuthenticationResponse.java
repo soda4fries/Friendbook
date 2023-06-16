@@ -1,4 +1,4 @@
-package com.wia1002g3.friendbook.security;
+package com.wia1002g3.friendbook.DTOs;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

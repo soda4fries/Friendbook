@@ -2,11 +2,10 @@ package com.wia1002g3.friendbook.mapping;
 
 
 import com.wia1002g3.friendbook.repository.UserRepository;
-import com.wia1002g3.friendbook.security.AuthenticationResponse;
-import com.wia1002g3.friendbook.security.AuthenticationService;
-import com.wia1002g3.friendbook.security.RegisterRequest;
-import com.wia1002g3.friendbook.security.loginRequest;
-import com.wia1002g3.friendbook.services.UserServices;
+import com.wia1002g3.friendbook.DTOs.AuthenticationResponse;
+import com.wia1002g3.friendbook.services.AuthenticationService;
+import com.wia1002g3.friendbook.DTOs.RegisterRequest;
+import com.wia1002g3.friendbook.DTOs.loginRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

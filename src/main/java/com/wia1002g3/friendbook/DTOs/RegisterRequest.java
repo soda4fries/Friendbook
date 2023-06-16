@@ -1,4 +1,4 @@
-package com.wia1002g3.friendbook.security;
+package com.wia1002g3.friendbook.DTOs;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +18,7 @@ public class RegisterRequest {
 
     private String firstName;
     private String lastName;
-    private Integer age;
+    private String dateOfBirth;
     private String address;
     private Boolean gender;
     private String bio;

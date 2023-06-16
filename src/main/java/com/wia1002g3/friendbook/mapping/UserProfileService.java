@@ -1,18 +1,15 @@
 package com.wia1002g3.friendbook.mapping;
 
-import com.wia1002g3.friendbook.entity.Post;
+import com.wia1002g3.friendbook.DTOs.UserEditReq;
+import com.wia1002g3.friendbook.DTOs.UserProfileDTO;
 import com.wia1002g3.friendbook.entity.User;
 import com.wia1002g3.friendbook.repository.UserRepository;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Stack;
 
 
 @RestController
@@ -34,7 +31,7 @@ public class UserProfileService {
         userProfileDTO.setUsername(user.getUsername());
         userProfileDTO.setFirstName(user.getFirstName());
         userProfileDTO.setLastName(user.getLastName());
-        userProfileDTO.setAge(user.getAge());
+        userProfileDTO.setDOB(user.getBirthday());
         userProfileDTO.setAddress(user.getAddress());
         userProfileDTO.setPhoneNumber(user.getPhoneNumber());
         userProfileDTO.setGender(user.getGender());
@@ -42,22 +39,6 @@ public class UserProfileService {
         userProfileDTO.setHobbies(user.getHobbies().toString());
         userProfileDTO.setRelationStatus(user.getRelationStatus());
         return ResponseEntity.ok(userProfileDTO);
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public class UserProfileDTO {
-        private String username;
-        private String firstName;
-        private String lastName;
-        private Integer age;
-        private String address;
-        private String phoneNumber;
-        private Boolean gender;
-        private String bio;
-        private String hobbies;
-        private String relationStatus;
     }
 
     @PostMapping("api/UserProfile/{userId}/editProfile")
@@ -68,7 +49,7 @@ public class UserProfileService {
         // Update the user profile information with the provided values
         user.setFirstName(updatedUser.getFirstName());
         user.setLastName(updatedUser.getLastName());
-        user.setAge(updatedUser.getAge());
+        user.setBirthday(updatedUser.getDOB());
         user.setAddress(updatedUser.getAddress());
         user.setPhoneNumber(updatedUser.getPhoneNumber());
         user.setGender(updatedUser.getGender());
@@ -78,31 +59,7 @@ public class UserProfileService {
 
         // Save the updated user object
         userRepository.save(user);
-
         return true;
-    }
-
-    @Data
-    private class UserEditReq {
-        private String firstName;
-        private String lastName;
-        private Integer age;
-        private String address;//research geospatial tools
-        private String phoneNumber;
-        private Boolean gender;
-        private String bio;
-        private String hobbies;
-        private String relationStatus;
-
-        private ArrayList<String> getHobbiesAsArrayList() {
-            String[] hobbyArr = hobbies.split(",");
-            ArrayList<String> hobbiesVector = new ArrayList<>();
-            for(int i = 0; i < hobbyArr.length; i++) {
-                hobbiesVector.add(hobbyArr[i]);
-            }
-            return hobbiesVector;
-        }
-
     }
 
     @PostMapping("api/UserProfile/addjob/{userId}/{newJob}")
@@ -152,4 +109,6 @@ public class UserProfileService {
         hobbies.add("Traveling");
         return hobbies;
     }
+
+
 }

@@ -26,7 +26,6 @@ public class User implements UserDetails {
     private String password;
     private String email;
     private String phoneNumber;
-    private Integer graphID;
 
     @ManyToMany
     @JoinTable(
@@ -90,9 +89,12 @@ public class User implements UserDetails {
     //userBio
     private String firstName;
     private String lastName;
-    private Integer age;
+    private String Birthday;
     private String address;
     private Boolean gender;
+
+    //Used for Full text Search
+    private String allInfo;
 
     @Column(name = "content")
     private String bio;

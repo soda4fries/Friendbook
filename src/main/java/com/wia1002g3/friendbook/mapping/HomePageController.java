@@ -1,5 +1,8 @@
 package com.wia1002g3.friendbook.mapping;
 
+import com.wia1002g3.friendbook.DTOs.PostDTO;
+import com.wia1002g3.friendbook.DTOs.PostUpload;
+import com.wia1002g3.friendbook.DTOs.UploadPostReq;
 import com.wia1002g3.friendbook.entity.Post;
 import com.wia1002g3.friendbook.entity.User;
 import com.wia1002g3.friendbook.repository.PostRepository;
@@ -17,50 +20,18 @@ public class HomePageController {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-    public static class PostDTO implements Comparable<PostDTO> {
-        private Integer id;
-        private String caption;
-        private String imageBase64;
-        private ArrayList<String> likeUser;
-
-        private Date timestamp;
-
-        public PostDTO(Integer id, String caption, String imageBase64, ArrayList<User> likes, Date timestamp) {
-            this.id = id;
-            this.caption = caption;
-            this.imageBase64 = imageBase64;
-            this.timestamp = timestamp;
-            this.likeUser = new ArrayList<>();
-
-            for (User user : likes) {
-                this.likeUser.add(user.getUsername());
-            }
-        }
-
-        @Override
-        public int compareTo(PostDTO o) {
-            return this.timestamp.compareTo(o.timestamp);
-        }
-
-    }
-
     @PostMapping("api/HomePage/post/{userid}")
-    public boolean CreatePost(@PathVariable Integer userid, @RequestBody postUpload postupload) {
+    public boolean CreatePost(@PathVariable Integer userid, @RequestBody PostUpload postupload) {
         User user = userRepository.findById(userid).orElseThrow();
         Post newPost = new Post();
         newPost.setPoster(user);
         newPost.setTimestamp(new Date());
-        newPost.setCaption(postupload.caption);
-        newPost.setImageBase64(postupload.base64image);
+        newPost.setCaption(postupload.getCaption());
+        newPost.setImageBase64(postupload.getBase64image());
         user.getPosts().add(newPost);
         postRepository.save(newPost);
         userRepository.save(user);
         return true;
-    }
-
-    private static class postUpload {
-        String caption;
-        String base64image;
     }
 
     @GetMapping("api/HomePage/GetHomePost/{userid}")
@@ -112,19 +83,13 @@ public class HomePageController {
         return ResponseEntity.ok(viewed);
     }
 
-    //upload post
-    public class UploadPostReq {
-        String caption;
-        String Base64image;
-    }
-
     @PostMapping("api/HomePage/UploadPost/{userid}")
     public boolean uploadPost(@PathVariable Integer userid, @RequestBody UploadPostReq request) {
         User user = userRepository.findById(userid).orElseThrow();
         Post post = new Post();
         post.setLikes(new ArrayList<>());
-        post.setCaption(request.caption);
-        post.setImageBase64(request.Base64image);
+        post.setCaption(request.getCaption());
+        post.setImageBase64(request.getBase64image());
         post.setTimestamp(new Date());
 
         user.getPosts().add(post);
@@ -133,7 +98,7 @@ public class HomePageController {
         return true;
     }
     @PostMapping("api/HomePage/LikePost/{userid}/{postid}")
-    public boolean uploadPost(@PathVariable Integer userid, @PathVariable Integer postid) {
+    public boolean likePost(@PathVariable Integer userid, @PathVariable Integer postid) {
         User user = userRepository.findById(userid).orElseThrow();
         Post post = postRepository.findById(postid).orElseThrow();
         post.getLikes().add(user);
