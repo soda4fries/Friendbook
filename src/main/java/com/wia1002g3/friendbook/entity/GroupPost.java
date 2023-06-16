@@ -1,11 +1,8 @@
 package com.wia1002g3.friendbook.entity;
 
+import jakarta.persistence.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.Data;
 
 @Entity
@@ -16,6 +13,10 @@ public class GroupPost {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Integer id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    private User poster;
 
     private String caption;
     private String ImageBase64;

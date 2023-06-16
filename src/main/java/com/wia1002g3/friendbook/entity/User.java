@@ -8,11 +8,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
-import java.util.Collection;
+import java.util.*;
 
 @Data
 @Builder
@@ -65,8 +62,12 @@ public class User implements UserDetails {
     @Transient
     private LinkedList<Integer> viewedPost;
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "user_id")
+    @ManyToMany
+    @JoinTable(
+            name = "user_conversation",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "conversation_id")
+    )
     private ArrayList<Conversation> conversations;
 
     @OneToMany(orphanRemoval = true)
@@ -77,8 +78,12 @@ public class User implements UserDetails {
     @JoinColumn(name = "user_id")
     private ArrayList<Post> posts;
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "user_id")
+    @ManyToMany
+    @JoinTable(
+            name = "user_community",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "community_id")
+    )
     private ArrayList<Community> communities;
 
 
@@ -88,9 +93,24 @@ public class User implements UserDetails {
     private Integer age;
     private String address;//research geospatial tools
     private String phoneNumber;
-    private String gender;
-    private String bio;
-    private String hobbies;
-    private String relationStatus;
+    private Boolean gender;
 
+    @Column(name = "content")
+    private String bio;
+
+    //Storing as ArrayList as users hobbies are a list
+    @ElementCollection
+    @CollectionTable(name = "Hobbies", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "Hobbies")
+    private ArrayList<String> hobbies;
+
+
+    //Storing as stack as user Experiance is added on top of one another
+    @ElementCollection
+    @CollectionTable(name = "job_experiences", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "experience")
+    @OrderBy("id DESC") // Optional: Sort experiences in descending order based on ID
+    private Stack<String> jobExperiences = new Stack<>();
+
+    private String relationStatus;
 }

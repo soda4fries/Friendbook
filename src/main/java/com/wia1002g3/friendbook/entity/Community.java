@@ -20,8 +20,8 @@ public class Community {
     private String communityInfo;
 
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "community_id")
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "Community_id")
     private ArrayList<GroupPost> groupPosts;
 
 }

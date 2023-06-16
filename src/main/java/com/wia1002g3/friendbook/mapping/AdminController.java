@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class AdminServices {
+public class AdminController {
 
     private final UserRepository userRepository;
 

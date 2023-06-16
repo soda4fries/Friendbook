@@ -15,7 +15,8 @@ public class FriendshipGraph {
 
     private String graphName;
 
-    @OneToMany(mappedBy = "parentGraph", cascade = CascadeType.ALL)
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "graphID")
     private ArrayList<UsersFriends> relationships;
 
 

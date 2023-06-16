@@ -1,5 +1,6 @@
 package com.wia1002g3.friendbook.mapping;
 
+import com.wia1002g3.friendbook.entity.Post;
 import com.wia1002g3.friendbook.entity.User;
 import com.wia1002g3.friendbook.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -8,8 +9,10 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Stack;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -35,7 +38,7 @@ public class UserProfileService {
         userProfileDTO.setPhoneNumber(user.getPhoneNumber());
         userProfileDTO.setGender(user.getGender());
         userProfileDTO.setBio(user.getBio());
-        userProfileDTO.setHobbies(user.getHobbies());
+        userProfileDTO.setHobbies(user.getHobbies().toString());
         userProfileDTO.setRelationStatus(user.getRelationStatus());
         return ResponseEntity.ok(userProfileDTO);
     }
@@ -50,7 +53,7 @@ public class UserProfileService {
         private Integer age;
         private String address;
         private String phoneNumber;
-        private String gender;
+        private Boolean gender;
         private String bio;
         private String hobbies;
         private String relationStatus;
@@ -69,7 +72,7 @@ public class UserProfileService {
         user.setPhoneNumber(updatedUser.getPhoneNumber());
         user.setGender(updatedUser.getGender());
         user.setBio(updatedUser.getBio());
-        user.setHobbies(updatedUser.getHobbies());
+        user.setHobbies(updatedUser.getHobbiesAsArrayList());
         user.setRelationStatus(updatedUser.getRelationStatus());
 
         // Save the updated user object
@@ -85,11 +88,30 @@ public class UserProfileService {
         private Integer age;
         private String address;//research geospatial tools
         private String phoneNumber;
-        private String gender;
+        private Boolean gender;
         private String bio;
         private String hobbies;
         private String relationStatus;
-        private Object partner;
+
+        private ArrayList<String> getHobbiesAsArrayList() {
+            String[] hobbyArr = hobbies.split(",");
+            ArrayList<String> hobbiesVector = new ArrayList<>();
+            for(int i = 0; i < hobbyArr.length; i++) {
+                hobbiesVector.add(hobbyArr[i]);
+            }
+            return hobbiesVector;
+        }
 
     }
+
+    @PostMapping("api/UserProfile/addjob/{userId}/{newJob}")
+    public boolean addJob(@PathVariable Integer userId, @PathVariable String newJob) {
+            User user = userRepository.findById(userId).orElseThrow();
+            Stack<String> jobs = user.getJobExperiences();
+            jobs.add(newJob);
+            userRepository.save(user);
+            return true;
+        }
+
+
 }

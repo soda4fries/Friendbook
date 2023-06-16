@@ -15,17 +15,16 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-public class FriendService {
+public class FriendController {
     private final UserRepository userRepository;
     private final FriendshipGraphService friendshipGraphService;
     private final FriendshipGraphRepository friendshipGraphRepository;
 
 
-    @GetMapping("/Friends/GetAllFriends/{userid}")
+    @GetMapping("/Friends/GetFriendsList/{userid}")
     public ResponseEntity<List<Integer>> getFriends(@PathVariable Integer userid) {
         User user = userRepository.findById(userid).orElseThrow();
         Integer graphID = user.getGraphID();
-
         FriendshipGraph graph = friendshipGraphService.getSingletonFriendshipGraph();
         ArrayList<Integer> GraphFriends = graph.showFriends(graphID);
         ArrayList<Integer> friends = new ArrayList<>();
@@ -35,7 +34,35 @@ public class FriendService {
         return ResponseEntity.ok(friends);
     }
 
-    @GetMapping("/Friends/GetAllMutuals/{userid}")
+    @GetMapping("/Friends/GetMutualFriends/{userid1}/{userid2}")
+    public ResponseEntity<List<Integer>> getMutualFriends(@PathVariable Integer userid1, @PathVariable Integer userid2) {
+        User user1 = userRepository.findById(userid1).orElseThrow();
+        User user2 = userRepository.findById(userid2).orElseThrow();
+        Integer User1graphID = user1.getGraphID();
+        Integer User2graphID = user2.getGraphID();
+
+
+        FriendshipGraph graph = friendshipGraphService.getSingletonFriendshipGraph();
+        ArrayList<Integer> User1Friends = graph.showFriends(User1graphID);
+        ArrayList<Integer> User2Friends = graph.showFriends(User2graphID);
+
+        ArrayList<Integer> mutualFriend = new ArrayList<>();
+
+        for (Integer friend : User1Friends) {
+            if (User2Friends.contains(friend)) {
+                mutualFriend.add(friend);
+            }
+        }
+        if (mutualFriend.size()==0) return ResponseEntity.notFound().build();
+
+        ArrayList<Integer> friends = new ArrayList<>();
+        for (Integer graphFriend : mutualFriend) {
+            friends.add(userRepository.findByGraphID(graphFriend).orElseThrow().getId());
+        }
+        return ResponseEntity.ok(friends);
+    }
+
+    @GetMapping("/Friends/GetAllEnhancedNetwork/{userid}")
     public ResponseEntity<ArrayList<ArrayList<Integer>>> getRelations(@PathVariable Integer userid) {
         User user = userRepository.findById(userid).orElseThrow();
         Integer graphID = user.getGraphID();

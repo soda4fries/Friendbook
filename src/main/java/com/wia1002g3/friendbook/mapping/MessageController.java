@@ -15,11 +15,25 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @RestController
-public class MessageService {
+public class MessageController {
 
     private final UserRepository userRepository;
     private final ConversationRepository conversationRepository;
     private final MessageRepository messageRepository;
+
+    @PostMapping("api/message/Dm/{userid1}/{userid2}")
+    public Boolean startMessage(@PathVariable Integer userid1, @PathVariable Integer userid2) {
+        Conversation newConversation = new Conversation();
+        User user1 = userRepository.findById(userid1).orElseThrow();
+        User user2 = userRepository.findById(userid2).orElseThrow();
+        newConversation.setConversationName(String.format("%s:%s,%s:%s", user1.getId().toString(), user1.getUsername(),user2.getId().toString(), user2.getUsername()));
+        user1.getConversations().add(newConversation);
+        user2.getConversations().add(newConversation);
+        userRepository.save(user1);
+        userRepository.save(user2);
+        conversationRepository.save(newConversation);
+        return true;
+    }
 
     @GetMapping("api/messaging/{userId}/conversations")
     public List<Integer> getUserConversationIds(@PathVariable Integer userId) {
@@ -80,7 +94,7 @@ public class MessageService {
         }
     }
 
-    @PostMapping("/conversations/postMessage/{conversationId}/")
+    @PostMapping("/conversations/sendMessage/{conversationId}/")
     public ResponseEntity<String> postMessageToConversation(@PathVariable Integer conversationId, @RequestBody SaveMessageDTO messageDTO) {
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new RuntimeException("Conversation not found"));

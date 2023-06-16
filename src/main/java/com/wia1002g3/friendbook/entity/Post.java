@@ -5,16 +5,21 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
 @Data
 @RequiredArgsConstructor
-public class Post {
+public class Post implements Comparable<Post>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Integer Id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    private User poster;
 
     private String caption;
     private String ImageBase64;
@@ -27,8 +32,12 @@ public class Post {
     )
     private ArrayList<User> likes;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Community community;
+
+    private Date timestamp;
+
+    @Override
+    public int compareTo(Post o) {
+        return this.timestamp.compareTo(o.getTimestamp());
+    }
 
 }

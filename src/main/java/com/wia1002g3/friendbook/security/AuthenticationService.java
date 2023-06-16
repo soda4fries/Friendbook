@@ -24,7 +24,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
         try {
-            User user = userServices.createUser(request.getUsername(), request.getPassword());
+            User user = userServices.createUser(request);
             String token = jwtService.generateToken(new LinkedHashMap<>(), user);
             return new AuthenticationResponse(token);
         } catch (RuntimeException e) {
