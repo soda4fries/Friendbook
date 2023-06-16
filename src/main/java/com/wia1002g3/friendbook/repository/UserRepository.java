@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByUsername(String username);
+
     Optional<User> findById(Integer id);
 
     Optional<User> findByGraphID(Integer id);

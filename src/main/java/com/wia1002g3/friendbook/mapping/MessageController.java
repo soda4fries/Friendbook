@@ -27,6 +27,7 @@ public class MessageController {
         User user1 = userRepository.findById(userid1).orElseThrow();
         User user2 = userRepository.findById(userid2).orElseThrow();
         newConversation.setConversationName(String.format("%s:%s,%s:%s", user1.getId().toString(), user1.getUsername(),user2.getId().toString(), user2.getUsername()));
+        newConversation.setAllMessages(new ArrayList<>() {});
         user1.getConversations().add(newConversation);
         user2.getConversations().add(newConversation);
         userRepository.save(user1);

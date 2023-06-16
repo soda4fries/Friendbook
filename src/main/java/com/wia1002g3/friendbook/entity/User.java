@@ -22,10 +22,19 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-
     private String username;
     private String password;
+    private String email;
+    private String phoneNumber;
     private Integer graphID;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_friends",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id")
+    )
+    private List<User> friends;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -47,7 +56,6 @@ public class User implements UserDetails {
     public boolean isAccountNonLocked() {
         return true;
     }
-
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
@@ -68,49 +76,40 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "conversation_id")
     )
-    private ArrayList<Conversation> conversations;
+    private List<Conversation> conversations;
 
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "user_id")
-    private ArrayList<Notification> notifications = new ArrayList<>();
+    private List<Notification> notifications;
 
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "user_id")
-    private ArrayList<Post> posts;
-
-    @ManyToMany
-    @JoinTable(
-            name = "user_community",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "community_id")
-    )
-    private ArrayList<Community> communities;
+    private List<Post> posts;
 
 
     //userBio
     private String firstName;
     private String lastName;
     private Integer age;
-    private String address;//research geospatial tools
-    private String phoneNumber;
+    private String address;
     private Boolean gender;
 
     @Column(name = "content")
     private String bio;
 
-    //Storing as ArrayList as users hobbies are a list
+    //Storing as List as hobbies are list
     @ElementCollection
     @CollectionTable(name = "Hobbies", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "Hobbies")
-    private ArrayList<String> hobbies;
+    private List<String> hobbies;
 
 
-    //Storing as stack as user Experiance is added on top of one another
+    //Storing as List here due to Database limitation, but operations are performed as stack then converted to list in controllers as user Experiance is added on top of one another
     @ElementCollection
     @CollectionTable(name = "job_experiences", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "experience")
     @OrderBy("id DESC") // Optional: Sort experiences in descending order based on ID
-    private Stack<String> jobExperiences = new Stack<>();
+    private List<String> jobExperiences;
 
     private String relationStatus;
 }

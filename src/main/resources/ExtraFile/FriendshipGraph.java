@@ -1,4 +1,4 @@
-package com.wia1002g3.friendbook.entity;
+package ExtraFile;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -10,18 +10,18 @@ import java.util.Queue;
 @Entity
 @Data
 public class FriendshipGraph {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
     private String graphName;
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "graphID")
-    private ArrayList<UsersFriends> relationships;
-
+    private ArrayList<UsersFriends> relationships = new ArrayList<>();
 
     public FriendshipGraph(){
-        relationships= new ArrayList<>(0);
+        this.graphName = "ONLYGRAPH";
+        //this.relationships = new ArrayList<>(0);
     }
 
     /**
@@ -47,6 +47,8 @@ public class FriendshipGraph {
      * @return adds a new User and returns his graphIndex
      */
     public Integer addUser() {
+        if (relationships == null) relationships = new ArrayList<>();
+        UsersFriends usersFriends = new UsersFriends();
         relationships.add(new UsersFriends());
         return relationships.size()-1;
     }

@@ -20,6 +20,6 @@ public class Conversation {
 
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "Conv_id")
-    private ArrayList<Message> allMessages;
+    private List<Message> allMessages;
 
 }

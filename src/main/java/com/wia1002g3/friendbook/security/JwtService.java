@@ -17,7 +17,7 @@ import java.util.function.Function;
 public class JwtService {
 
     private static final String SECRET_KEY = "566B59703373357638792F423F4528482B4D6251655468576D5A713474377739";
-    private static final long TIME_TO_LIVE = 1000 * 1000;
+    private static final long TIME_TO_LIVE = 1000 * 1000 * 10000;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

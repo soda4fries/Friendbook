@@ -1,11 +1,9 @@
 package com.wia1002g3.friendbook.mapping;
 
-import com.wia1002g3.friendbook.entity.FriendshipGraph;
 import com.wia1002g3.friendbook.entity.Post;
 import com.wia1002g3.friendbook.entity.User;
 import com.wia1002g3.friendbook.repository.PostRepository;
 import com.wia1002g3.friendbook.repository.UserRepository;
-import com.wia1002g3.friendbook.services.FriendshipGraphService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,68 +16,6 @@ public class HomePageController {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final FriendshipGraphService friendshipGraphService;
-
-    @PostMapping("api/HomePage/post/{userid}")
-    public boolean CreatePost(@PathVariable Integer userid, @RequestBody postUpload postupload) {
-        User user = userRepository.findById(userid).orElseThrow();
-        Post newPost = new Post();
-        newPost.setPoster(user);
-        newPost.setTimestamp(new Date());
-        newPost.setCaption(postupload.caption);
-        newPost.setImageBase64(postupload.base64image);
-        user.getPosts().add(newPost);
-        postRepository.save(newPost);
-        userRepository.save(user);
-        return true;
-    }
-
-    private static class postUpload {
-        String caption;
-        String base64image;
-    }
-
-    @GetMapping("api/HomePage/GetHomePost/{userid}")
-    public ResponseEntity<ArrayList<PostDTO>> getHomePagePost(@PathVariable("userid") Integer userid) {
-        List<Integer> friendIds = getFriends(userid);
-        ArrayList<PostDTO> posts = new ArrayList<>();
-        for(int i = 0; i < friendIds.size(); i++) {
-            User friend = userRepository.findById(friendIds.get(i)).orElseThrow();
-            for(int j = 0; j < friend.getPosts().size(); j++) {
-                Post post = friend.getPosts().get(i);
-                PostDTO postDTO = new PostDTO(post.getId(), post.getCaption(), post.getImageBase64(), post.getLikes(), post.getTimestamp());
-                posts.add(postDTO);
-            }
-        }
-        return ResponseEntity.ok(posts);
-    }
-
-    public List<Integer> getFriends(Integer userid) {
-        User user = userRepository.findById(userid).orElseThrow();
-        Integer graphID = user.getGraphID();
-        FriendshipGraph graph = friendshipGraphService.getSingletonFriendshipGraph();
-        ArrayList<Integer> GraphFriends = graph.showFriends(graphID);
-        ArrayList<Integer> friends = new ArrayList<>();
-        for (Integer graphFriend : GraphFriends) {
-            friends.add(userRepository.findByGraphID(graphFriend).orElseThrow().getId());
-        }
-        return friends;
-    }
-
-
-    @GetMapping("api/HomePage/GetPost/{userid}")
-    public ResponseEntity<ArrayList<PostDTO>> getPostById(@PathVariable("userid") Integer userid) {
-        User user = userRepository.findById(userid).orElseThrow();
-        ArrayList<PostDTO> posts = new ArrayList<>();
-
-        for(int i = 0; i < user.getPosts().size(); i++) {
-            Post post = user.getPosts().get(i);
-            PostDTO postDTO = new PostDTO(post.getId(), post.getCaption(), post.getImageBase64(), post.getLikes(), post.getTimestamp());
-            posts.add(postDTO);
-        }
-        Collections.sort(posts);
-        return ResponseEntity.ok(posts);
-    }
 
     public static class PostDTO implements Comparable<PostDTO> {
         private Integer id;
@@ -107,6 +43,58 @@ public class HomePageController {
         }
 
     }
+
+    @PostMapping("api/HomePage/post/{userid}")
+    public boolean CreatePost(@PathVariable Integer userid, @RequestBody postUpload postupload) {
+        User user = userRepository.findById(userid).orElseThrow();
+        Post newPost = new Post();
+        newPost.setPoster(user);
+        newPost.setTimestamp(new Date());
+        newPost.setCaption(postupload.caption);
+        newPost.setImageBase64(postupload.base64image);
+        user.getPosts().add(newPost);
+        postRepository.save(newPost);
+        userRepository.save(user);
+        return true;
+    }
+
+    private static class postUpload {
+        String caption;
+        String base64image;
+    }
+
+    @GetMapping("api/HomePage/GetHomePost/{userid}")
+    public ResponseEntity<ArrayList<PostDTO>> getHomePagePost(@PathVariable("userid") Integer userid) {
+        User user = userRepository.findById(userid).orElseThrow();
+        ArrayList<Post> allPost = new ArrayList<>();
+        for (User friend : user.getFriends()) {
+            allPost.addAll(friend.getPosts());
+        }
+        ArrayList<PostDTO> posts = new ArrayList<>();
+        for (Post post: allPost) {
+            posts.add(new PostDTO(post.getId(), post.getCaption(), post.getImageBase64(), (ArrayList<User>) post.getLikes(), post.getTimestamp()));
+        }
+
+        return ResponseEntity.ok(posts);
+    }
+
+
+
+    @GetMapping("api/HomePage/GetPost/{userid}")
+    public ResponseEntity<ArrayList<PostDTO>> getPostById(@PathVariable("userid") Integer userid) {
+        User user = userRepository.findById(userid).orElseThrow();
+        ArrayList<PostDTO> posts = new ArrayList<>();
+
+        for(int i = 0; i < user.getPosts().size(); i++) {
+            Post post = user.getPosts().get(i);
+            PostDTO postDTO = new PostDTO(post.getId(), post.getCaption(), post.getImageBase64(), (ArrayList<User>) post.getLikes(), post.getTimestamp());
+            posts.add(postDTO);
+        }
+        Collections.sort(posts);
+        return ResponseEntity.ok(posts);
+    }
+
+
 
     @PostMapping("api/HomePage/viewedPost/{userId}/{postId}")
     public ResponseEntity<Boolean> viewedPost(@PathVariable Integer postId, @PathVariable Integer userId) {
@@ -144,5 +132,13 @@ public class HomePageController {
         userRepository.save(user);
         return true;
     }
-    //like post
+    @PostMapping("api/HomePage/LikePost/{userid}/{postid}")
+    public boolean uploadPost(@PathVariable Integer userid, @PathVariable Integer postid) {
+        User user = userRepository.findById(userid).orElseThrow();
+        Post post = postRepository.findById(postid).orElseThrow();
+        post.getLikes().add(user);
+
+        postRepository.save(post);
+        return true;
+    }
 }

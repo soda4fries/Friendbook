@@ -26,20 +26,42 @@ public class AuthenticationService {
         try {
             User user = userServices.createUser(request);
             String token = jwtService.generateToken(new LinkedHashMap<>(), user);
+            System.out.println("did not fail to Generate token");
             return new AuthenticationResponse(token);
         } catch (RuntimeException e) {
-            // Log the exception or handle it appropriately
+            System.out.println(e.toString());
             throw new RuntimeException("Failed to register user");
         }
     }
 
     public AuthenticationResponse login(loginRequest request) {
+        String userName;
+        userName =  request.getUsername();
+
+        /*
+        if (request.getCredtype().equals("USERNAME")) {
+            userName =  request.getUsername();
+        }
+
+
+        else {
+
+            Optional<User> userOptional = userRepository.findByEmailOrPhoneNumber(request.getCred());
+            if (userOptional.isEmpty()) {
+                // logic for sending phone or email not registered
+            }
+            User user = userOptional.get();
+            userName = user.getUsername();
+        }
+         */
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername(), request.getPassword()
+                        userName, request.getPassword()
                 )
         );
-        User user = userRepository.findByUsername(request.getUsername())
+
+        User user = userRepository.findByUsername(userName)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return AuthenticationResponse.builder()
@@ -51,9 +73,5 @@ public class AuthenticationService {
     public User getUser(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
-
-    public boolean IsUserNameTaken(String username){
-        return userRepository.existsByUsername(username);
     }
 }

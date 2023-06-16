@@ -1,7 +1,6 @@
-package com.wia1002g3.friendbook.services;
+package ExtraFile;
 
 import com.wia1002g3.friendbook.entity.FriendshipGraph;
-import com.wia1002g3.friendbook.repository.FriendshipGraphRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,10 +20,11 @@ public class FriendshipGraphService {
             return existingGraph.get();
         } else {
             FriendshipGraph newGraph = new FriendshipGraph();
-            newGraph.setGraphName("ONLY_GRAPH");
+            newGraph.setGraphName("ONLYGRAPH");
             // Set other properties and perform necessary initialization
             return friendshipGraphRepository.save(newGraph);
         }
     }
+
 }
 

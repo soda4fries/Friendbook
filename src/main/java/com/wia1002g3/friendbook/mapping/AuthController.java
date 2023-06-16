@@ -1,10 +1,12 @@
 package com.wia1002g3.friendbook.mapping;
 
 
+import com.wia1002g3.friendbook.repository.UserRepository;
 import com.wia1002g3.friendbook.security.AuthenticationResponse;
 import com.wia1002g3.friendbook.security.AuthenticationService;
 import com.wia1002g3.friendbook.security.RegisterRequest;
 import com.wia1002g3.friendbook.security.loginRequest;
+import com.wia1002g3.friendbook.services.UserServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +18,18 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthenticationService Authservice;
+    private final UserRepository userRepository;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
+        System.out.println("PostMapping worked");
         try {
             AuthenticationResponse response = Authservice.register(request);
+            System.out.println("Register worked");
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
-            // Handle the exception and return an error response
+            System.out.println(e.getMessage());
+            System.out.println("Something went wrong worked");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -35,7 +41,7 @@ public class AuthController {
 
     @GetMapping("/registerVerify/userNameTaken/{username}")
     public boolean UserNameTaken(@PathVariable String username){
-        return Authservice.IsUserNameTaken(username);
+        return userRepository.existsByUsername(username);
     }
 
 }

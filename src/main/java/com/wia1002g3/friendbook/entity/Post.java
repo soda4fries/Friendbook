@@ -30,7 +30,7 @@ public class Post implements Comparable<Post>{
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private ArrayList<User> likes;
+    private List<User> likes;
 
 
     private Date timestamp;
