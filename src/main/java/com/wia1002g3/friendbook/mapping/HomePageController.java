@@ -43,7 +43,7 @@ public class HomePageController {
         }
         ArrayList<PostDTO> posts = new ArrayList<>();
         for (Post post: allPost) {
-            posts.add(new PostDTO(post.getId(), post.getCaption(), post.getImageBase64(), (ArrayList<User>) post.getLikes(), post.getTimestamp()));
+            posts.add(new PostDTO(post.getId(), post.getCaption(), post.getImageBase64(), post.getLikes(), post.getTimestamp()));
         }
 
         return ResponseEntity.ok(posts);
@@ -58,7 +58,7 @@ public class HomePageController {
 
         for(int i = 0; i < user.getPosts().size(); i++) {
             Post post = user.getPosts().get(i);
-            PostDTO postDTO = new PostDTO(post.getId(), post.getCaption(), post.getImageBase64(), (ArrayList<User>) post.getLikes(), post.getTimestamp());
+            PostDTO postDTO = new PostDTO(post.getId(), post.getCaption(), post.getImageBase64(), post.getLikes(), post.getTimestamp());
             posts.add(postDTO);
         }
         Collections.sort(posts);

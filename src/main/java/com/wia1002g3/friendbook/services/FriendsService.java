@@ -3,12 +3,10 @@ package com.wia1002g3.friendbook.services;
 import com.wia1002g3.friendbook.entity.User;
 import com.wia1002g3.friendbook.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 @RequiredArgsConstructor

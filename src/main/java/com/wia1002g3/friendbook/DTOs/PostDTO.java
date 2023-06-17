@@ -5,17 +5,18 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class PostDTO implements Comparable<PostDTO> {
     private Integer id;
     private String caption;
     private String imageBase64;
-    private ArrayList<String> likeUser;
+    private List<String> likeUser;
 
     private Date timestamp;
 
-    public PostDTO(Integer id, String caption, String imageBase64, ArrayList<User> likes, Date timestamp) {
+    public PostDTO(Integer id, String caption, String imageBase64, List<User> likes, Date timestamp) {
         this.id = id;
         this.caption = caption;
         this.imageBase64 = imageBase64;

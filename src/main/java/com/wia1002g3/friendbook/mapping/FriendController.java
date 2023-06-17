@@ -22,13 +22,13 @@ public class FriendController {
 
 
     @GetMapping("/Friends/GetFriendsList/{userid}")
-    public ResponseEntity<List<Integer>> getFriends(@PathVariable Integer userid) {
+    public ResponseEntity<List<UserDTO>> getFriends(@PathVariable Integer userid) {
         User user = userRepository.findById(userid).orElseThrow();
-        List friendIDs = new ArrayList<>();
-        for (User friends : user.getFriends()) {
-            friendIDs.add(friends.getId());
+        ArrayList<UserDTO> friends = new ArrayList<>();
+        for (User friend : user.getFriends()) {
+            friends.add(new UserDTO(user.getId(), user.getUsername()));
         }
-        return ResponseEntity.ok(friendIDs);
+        return ResponseEntity.ok(friends);
     }
 
     @GetMapping("/Friends/GetMutualFriends/{userid1}/{userid2}")
@@ -36,8 +36,8 @@ public class FriendController {
         User user1 = userRepository.findById(userid1).orElseThrow();
         User user2 = userRepository.findById(userid2).orElseThrow();
 
-        ArrayList<User> User1Friends = (ArrayList<User>) user1.getFriends();
-        ArrayList<User> User2Friends = (ArrayList<User>) user2.getFriends();
+        List<User> User1Friends = user1.getFriends();
+        List<User> User2Friends = user2.getFriends();
 
         ArrayList<User> mutualFriend = new ArrayList<>();
 
