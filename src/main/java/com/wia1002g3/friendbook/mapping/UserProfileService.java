@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
 
 
 @RestController
@@ -67,10 +68,16 @@ public class UserProfileService {
     public boolean addJob(@PathVariable Integer userId, @PathVariable String newJob) {
             User user = userRepository.findById(userId).orElseThrow();
             List<String> jobs = user.getJobExperiences();
-            jobs.add(newJob);
+            Stack<String> addJobs = new Stack<>();
+            for (String job : jobs) {
+                addJobs.push(job);
+            }
+            addJobs.push(newJob);
+            user.setJobExperiences(addJobs);
             userRepository.save(user);
             return true;
         }
+
 
     @GetMapping("api/UserProfile/hobbylist/")
     public ArrayList<String> getHobbylist(){
