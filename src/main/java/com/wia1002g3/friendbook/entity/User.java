@@ -11,6 +11,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
+/*
+   -Uses Template Design pattern to delegate security configured on UserDetails to User class
+   -User Builder creation pattern to create, User is Created in services/UserServices and Modified in mapping/UserProfile service
+   -Some fields are stored as List as requirement for persistance, but as List is an abstract interface the operation
+   are done by the suitable concrete Data structure
+   -Additionally, the code makes use of Lombok annotations such as
+   @Data, @NoArgsConstructor, and @AllArgsConstructor to reduce boilerplate code and provide commonly used functionality
+ */
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -27,6 +36,21 @@ public class User implements UserDetails {
     private String email;
     private String phoneNumber;
 
+
+    /* The other User are mapped as Many to Many and stored as tuples in DB, so this creates a Linked-List Graph
+       User1 - User2          //User 2 friend
+       User2 - User1, User3   //User 1,2 friend
+       User3 - User2          //User 2 friend
+       Reason for choosing this Data structure
+       1) adding or removing edges between vertices can be done in constant time (O(1)) on average
+       2) Efficient iteration: Traverse the adjacency list of a vertex with O(deg(v)) time complexity,
+          where deg(v) is the degree of the vertex, so finding friendlist is O(deg(v)), this allows bfs to be fast.
+          Dfs is implemented in the service/FriendService
+       3) Space efficiency for sparse graphs: Linked lists allocate memory only
+          for existing edges, saving space for non-existent edges. As in social media most users are not friend with
+          ever other user, alot of space is saved.
+
+    */
     @ManyToMany
     @JoinTable(
             name = "user_friends",
@@ -35,6 +59,9 @@ public class User implements UserDetails {
     )
     private List<User> friends;
 
+    /* The security config  allows only user with role Admin to access the /Admin/ mapping
+       It is a Enum type as only two values are possible
+     */
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -66,8 +93,19 @@ public class User implements UserDetails {
     }
 
 
+    /*
+    The users action history is stored here as IDs of the viewed post,
+    It is stored as List for persistance requirement, but initialized as LinkedList when user is build
+    @Transient annotation ensures it is not saved to Database and when user invokes sign out it is flushed
+    User user = User.builder()  //Code from services/userservices
+                .username(request.getUsername())
+                .....
+                .viewedPost(new LinkedList<>())
+                ....
+                .build();
+     */
     @Transient
-    private LinkedList<Integer> viewedPost;
+    private List<Integer> viewedPost;
 
     @ManyToMany
     @JoinTable(
@@ -96,6 +134,7 @@ public class User implements UserDetails {
     //Used for Full text Search
     private String allInfo;
 
+    //Used for Full text Search
     @Column(name = "content")
     private String bio;
 
@@ -106,12 +145,13 @@ public class User implements UserDetails {
     private List<String> hobbies;
 
 
-    //Storing as List here due to Database limitation, but operations are performed as stack then converted to list in controllers as user Experiance is added on top of one another
+    //Storing as List here due to Database limitation, but operations are performed as stack then
+    //converted to list in controllers as user Experiance is added on top of one another similar to viewed profile
     @ElementCollection
     @CollectionTable(name = "job_experiences", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "experience")
-    @OrderBy("id DESC") // Optional: Sort experiences in descending order based on ID
     private List<String> jobExperiences;
 
     private String relationStatus;
+
 }

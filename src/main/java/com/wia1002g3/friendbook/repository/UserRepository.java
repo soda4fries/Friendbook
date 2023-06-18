@@ -4,6 +4,7 @@ import com.wia1002g3.friendbook.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,8 +18,12 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     boolean existsByUsername(String username);
 
-    @Query(value = "SELECT u FROM User u WHERE to_tsvector('english', u.bio) @@ to_tsquery('english', :query)", nativeQuery = true)
-    ArrayList<User> searchByBio(@Param("query") String query);
+    @Query(value = "SELECT * FROM user_table WHERE content ILIKE %:keyword%", nativeQuery = true)
+    ArrayList<User> searchByBio(String keyword);
+
+
+
+
 
     Optional<User> findByEmailOrPhoneNumber(String email, String phoneNumber);
 

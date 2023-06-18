@@ -18,6 +18,14 @@ public class FriendsService {
         return (ArrayList<User>) userRepository.findById(userId).orElseThrow().getFriends();
     }
 
+    /*
+    Performs dfs and finds stores the friend in hops as Arrays of Array of UserIDs
+    if user1 -> friend -> friends friend
+    then hops(0) contains user1
+         hops(1) contains friend
+         hops(3) contains friends friend
+     */
+
     public ArrayList<ArrayList<Integer>> bfs(Integer userID) {
         User user = userRepository.findById(userID).orElseThrow();
 
@@ -45,11 +53,6 @@ public class FriendsService {
             }
             hops.add(currentHop);
         }
-
-
-
-
-
         return hops;
     }
 

@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
+
 @RestController
 @RequestMapping("/auth/")
 @RequiredArgsConstructor
@@ -36,6 +38,13 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody loginRequest request) {
         return ResponseEntity.ok(Authservice.login(request));
+    }
+
+    // As JWT is stateless authentication, the user will delete the client side token and is logged out
+    @PostMapping("/logout/{userId}")
+    public ResponseEntity<String> logout(@PathVariable Integer userId) {
+        userRepository.findById(userId).orElseThrow().setViewedPost(new LinkedList<>());
+        return ResponseEntity.ok("Logged out");
     }
 
     @GetMapping("/registerVerify/userNameTaken/{username}")

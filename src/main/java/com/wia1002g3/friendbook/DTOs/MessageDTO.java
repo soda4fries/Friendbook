@@ -10,6 +10,7 @@ public class MessageDTO implements Comparable<MessageDTO> {
     private String message;
     private Date timestamp;
     private Integer senderUserId;
+    private String SenderUsername;
 
     @Override
     public int compareTo(MessageDTO o) {

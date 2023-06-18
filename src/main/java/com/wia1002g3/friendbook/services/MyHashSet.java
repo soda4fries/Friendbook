@@ -4,6 +4,9 @@ package com.wia1002g3.friendbook.services;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ Used for storing visited node in dfs for enhanced networking
+ */
 public class MyHashSet<E> {
     private static final int DEFAULT_CAPACITY = 16;
     private static final double DEFAULT_LOAD_FACTOR = 0.75;

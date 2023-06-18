@@ -18,4 +18,7 @@ public class UserProfileDTO {
     private String bio;
     private String hobbies;
     private String relationStatus;
+    private String jobExperiance;
+    private String posts;
+
 }

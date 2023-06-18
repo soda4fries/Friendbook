@@ -1,7 +1,6 @@
 package com.wia1002g3.friendbook.mapping;
 
 import com.wia1002g3.friendbook.DTOs.PostDTO;
-import com.wia1002g3.friendbook.DTOs.PostUpload;
 import com.wia1002g3.friendbook.DTOs.UploadPostReq;
 import com.wia1002g3.friendbook.entity.Post;
 import com.wia1002g3.friendbook.entity.User;
@@ -20,19 +19,6 @@ public class HomePageController {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-    @PostMapping("api/HomePage/post/{userid}")
-    public boolean CreatePost(@PathVariable Integer userid, @RequestBody PostUpload postupload) {
-        User user = userRepository.findById(userid).orElseThrow();
-        Post newPost = new Post();
-        newPost.setPoster(user);
-        newPost.setTimestamp(new Date());
-        newPost.setCaption(postupload.getCaption());
-        newPost.setImageBase64(postupload.getBase64image());
-        user.getPosts().add(newPost);
-        postRepository.save(newPost);
-        userRepository.save(user);
-        return true;
-    }
 
     @GetMapping("api/HomePage/GetHomePost/{userid}")
     public ResponseEntity<ArrayList<PostDTO>> getHomePagePost(@PathVariable("userid") Integer userid) {
@@ -70,7 +56,7 @@ public class HomePageController {
     @PostMapping("api/HomePage/viewedPost/{userId}/{postId}")
     public ResponseEntity<Boolean> viewedPost(@PathVariable Integer postId, @PathVariable Integer userId) {
         User user = userRepository.findById(userId).orElseThrow();
-        LinkedList<Integer> viewed = user.getViewedPost();
+        List<Integer> viewed = user.getViewedPost();
         viewed.add(postId);
         userRepository.save(user);
         return ResponseEntity.ok(Boolean.TRUE);
@@ -79,7 +65,7 @@ public class HomePageController {
     @GetMapping("api/HomePage/GetViewedPost/{userid}/")
     public ResponseEntity<List<Integer>> getViewedPost(@PathVariable Integer userid) {
         User user = userRepository.findById(userid).orElseThrow();
-        LinkedList<Integer> viewed = user.getViewedPost();
+        List<Integer> viewed = user.getViewedPost();
         return ResponseEntity.ok(viewed);
     }
 
@@ -106,4 +92,14 @@ public class HomePageController {
         postRepository.save(post);
         return true;
     }
+
+    @PostMapping("api/HomePage/unLikePost/{userid}/{postid}")
+    public boolean unlikePost(@PathVariable Integer userid, @PathVariable Integer postid) {
+        User user = userRepository.findById(userid).orElseThrow();
+        Post post = postRepository.findById(postid).orElseThrow();
+        post.getLikes().remove(user);
+        postRepository.save(post);
+        return true;
+    }
+
 }

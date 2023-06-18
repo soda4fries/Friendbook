@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
+/*
+ Allows posts to be send most recent posts first
+ */
 @Entity
 @Data
 @RequiredArgsConstructor

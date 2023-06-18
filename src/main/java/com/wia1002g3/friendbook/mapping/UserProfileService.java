@@ -38,6 +38,8 @@ public class UserProfileService {
         userProfileDTO.setBio(user.getBio());
         userProfileDTO.setHobbies(user.getHobbies().toString());
         userProfileDTO.setRelationStatus(user.getRelationStatus());
+        userProfileDTO.setJobExperiance(user.getJobExperiences().toString());
+        userProfileDTO.setPosts(user.getPosts().toString());
         return ResponseEntity.ok(userProfileDTO);
     }
 
@@ -56,7 +58,6 @@ public class UserProfileService {
         user.setBio(updatedUser.getBio());
         user.setHobbies(updatedUser.getHobbiesAsArrayList());
         user.setRelationStatus(updatedUser.getRelationStatus());
-
         // Save the updated user object
         userRepository.save(user);
         return true;

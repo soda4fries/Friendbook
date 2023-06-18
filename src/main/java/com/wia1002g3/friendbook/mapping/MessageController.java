@@ -33,14 +33,14 @@ public class MessageController {
         newConversation.setAllMessages(new ArrayList<>() {});
         user1.getConversations().add(newConversation);
         user2.getConversations().add(newConversation);
+        conversationRepository.save(newConversation);
         userRepository.save(user1);
         userRepository.save(user2);
-        conversationRepository.save(newConversation);
         return true;
     }
 
-    @PostMapping("api/message/Group/{userid1}/{userid2}")
-    public Boolean startMessage(@RequestBody CreateGroupRequest request) {
+    @PostMapping("api/message/Group/")
+    public Boolean startGroupMessage(@RequestBody CreateGroupRequest request) {
         Conversation newConversation = new Conversation();
         newConversation.setAllMessages(new ArrayList<>() {});
         newConversation.setConversationName(request.getGroupName());
@@ -80,6 +80,7 @@ public class MessageController {
             messageDTO.setMessage(message.getMessage());
             messageDTO.setTimestamp(message.getTimestamp());
             messageDTO.setSenderUserId(message.getSender().getId());
+            messageDTO.setSenderUsername(message.getSender().getUsername());
             messageDTOs.add(messageDTO);
         }
 
@@ -101,7 +102,7 @@ public class MessageController {
         return list.subList(startIndex, endIndex);
     }
 
-    @PostMapping("api/messaging/sendMessage/{conversationId}/")
+    @PostMapping("api/messaging/sendMessage/{conversationId}")
     public ResponseEntity<String> postMessageToConversation(@PathVariable Integer conversationId, @RequestBody SaveMessageDTO messageDTO) {
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new RuntimeException("Conversation not found"));

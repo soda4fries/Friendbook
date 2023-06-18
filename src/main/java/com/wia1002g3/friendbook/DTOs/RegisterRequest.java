@@ -15,7 +15,6 @@ public class RegisterRequest {
     private String password;
     private String email;
     private String phoneNumber;
-
     private String firstName;
     private String lastName;
     private String dateOfBirth;
@@ -23,7 +22,8 @@ public class RegisterRequest {
     private Boolean gender;
     private String bio;
     private String hobbies;
-    private String jobexperiances;
+    private String jobExperiance;
     private Integer isAdminrole;
+    private String RelationshipStatus;
 
 }

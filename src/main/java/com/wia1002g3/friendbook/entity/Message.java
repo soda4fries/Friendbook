@@ -5,6 +5,10 @@ import lombok.Data;
 
 import java.util.Date;
 
+/*
+Allows messages to be sorted based on their timestamps
+by implementing the compareTo() method and it is used for sending top messages for viewing by paging them
+ */
 @Entity
 @Data
 public class Message implements Comparable<Message> {

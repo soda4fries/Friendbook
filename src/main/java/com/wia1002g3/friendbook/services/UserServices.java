@@ -15,21 +15,6 @@ import java.util.*;
 public class UserServices {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    public String ConvertUserIDtoUserName(Integer userID) throws Exception{
-        return userRepository.findById(userID).orElseThrow(()-> new Exception("User not found")).getUsername();
-    }
-
-    public String[] ConvertUserIDstoUserNames(Integer[] userIDs) {
-        return Arrays.stream(userIDs).
-                map(id -> {
-                    try {
-                        return ConvertUserIDtoUserName(id);
-                    } catch (Exception e) {
-                        return "INVALID_USER";
-                    }
-                })
-                .toArray(String[]::new);
-    }
 
     public User createUser(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
@@ -39,20 +24,25 @@ public class UserServices {
         System.out.println("Singleton graph works");
         Role role = (request.getIsAdminrole() == 1) ? Role.ADMIN : Role.USER;
         System.out.println("Role works");
+        System.out.println(request.toString());
         User user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .phoneNumber(request.getPhoneNumber())
                 .email(request.getEmail())
                 .role(role)
+                .bio(request.getBio())
                 .friends(new ArrayList<User>())
+                .viewedPost(new LinkedList<>())
+                .posts(new ArrayList<>())
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .gender(request.getGender())
+                .relationStatus(request.getRelationshipStatus())
                 .address(request.getAddress())
                 .Birthday(request.getDateOfBirth())
                 .hobbies(getHobbiesAsArrayList(request.getHobbies()))
-                .jobExperiences(getExperianceAsArrayList(request.getJobexperiances()))
+                .jobExperiences(getExperianceAsList(request.getJobExperiance()))
                 .build();
         System.out.println("User builder works");
         userRepository.save(user);
@@ -70,7 +60,7 @@ public class UserServices {
         return hobbiesVector;
     }
 
-    private Stack<String> getExperianceAsArrayList(String jobExperiance) {
+    private Stack<String> getExperianceAsList(String jobExperiance) {
         String[] jobExperiances = jobExperiance.split(",");
         Stack<String> JobsStact = new Stack<>();
         for (String experiance : jobExperiances) {
