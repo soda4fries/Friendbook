@@ -32,7 +32,7 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/users/{userId}/posts/{postId}")
+    @DeleteMapping("admin/users/{userId}/posts/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable Integer userId, @PathVariable Integer postId) {
         Optional<User> userOptional = userRepository.findById(userId);
 

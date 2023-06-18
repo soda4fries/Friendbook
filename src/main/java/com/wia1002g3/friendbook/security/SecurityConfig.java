@@ -1,3 +1,4 @@
+
 package com.wia1002g3.friendbook.security;
 
 import lombok.RequiredArgsConstructor;
@@ -20,10 +21,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        /* Debug security config
         httpSecurity
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/**", "/static/**", "**")
+                .requestMatchers("/auth/**", "/static/**", "/admin/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -33,7 +35,25 @@ public class SecurityConfig {
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+           */
 
+        httpSecurity
+                .csrf().disable()
+                .authorizeHttpRequests()
+                .requestMatchers("/auth/**", "/static/**")
+                .permitAll()
+                .requestMatchers("/admin/**")
+                .hasAnyAuthority("ADMIN")
+                .anyRequest()
+                .authenticated()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
+
     }
+
 }
