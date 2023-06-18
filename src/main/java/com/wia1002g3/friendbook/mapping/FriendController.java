@@ -26,7 +26,7 @@ public class FriendController {
         User user = userRepository.findById(userid).orElseThrow();
         ArrayList<UserDTO> friends = new ArrayList<>();
         for (User friend : user.getFriends()) {
-            friends.add(new UserDTO(user.getId(), user.getUsername()));
+            friends.add(new UserDTO(friend.getId(), friend.getUsername()));
         }
         return ResponseEntity.ok(friends);
     }
@@ -56,7 +56,7 @@ public class FriendController {
     }
 
     @GetMapping("/Friends/GetAllEnhancedNetwork/{userid}")
-    public ResponseEntity<ArrayList<ArrayList<UserDTO>>> getRelations(@PathVariable Integer userid) {
+    public ResponseEntity<ArrayList<ArrayList<UserDTO>>> GetNetwok(@PathVariable Integer userid) {
         ArrayList<ArrayList<Integer>> hops = friendsService.bfs(userid);
 
         ArrayList<ArrayList<UserDTO>> network = new ArrayList<>();
@@ -72,10 +72,9 @@ public class FriendController {
     }
 
     @GetMapping("/Friends/AddFriend/{userid1}/{userid2}")
-    public ResponseEntity<Boolean> getRelations(@PathVariable Integer userid1, @PathVariable Integer userid2) {
+    public ResponseEntity<Boolean> addFriends(@PathVariable Integer userid1, @PathVariable Integer userid2) {
         User user1 = userRepository.findById(userid1).orElseThrow();
         User user2 = userRepository.findById(userid2).orElseThrow();
-
         user1.getFriends().add(user2);
         user2.getFriends().add(user1);
         userRepository.save(user1);

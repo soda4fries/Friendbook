@@ -18,12 +18,9 @@ public class UserServices {
 
     public User createUser(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            System.out.println("User Already exist");
             throw new RuntimeException("Username already exists");
         }
-        System.out.println("Singleton graph works");
         Role role = (request.getIsAdminrole() == 1) ? Role.ADMIN : Role.USER;
-        System.out.println("Role works");
         System.out.println(request.toString());
         User user = User.builder()
                 .username(request.getUsername())
@@ -32,7 +29,7 @@ public class UserServices {
                 .email(request.getEmail())
                 .role(role)
                 .bio(request.getBio())
-                .friends(new ArrayList<User>())
+                .friends(new ArrayList<>())
                 .viewedPost(new LinkedList<>())
                 .posts(new ArrayList<>())
                 .firstName(request.getFirstName())
@@ -44,10 +41,7 @@ public class UserServices {
                 .hobbies(getHobbiesAsArrayList(request.getHobbies()))
                 .jobExperiences(getExperianceAsList(request.getJobExperiance()))
                 .build();
-        System.out.println("User builder works");
         userRepository.save(user);
-        System.out.println("user Repo works");
-        System.out.println("Friendship graph works");
         return user;
     }
 
