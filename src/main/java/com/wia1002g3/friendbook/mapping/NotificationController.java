@@ -24,11 +24,13 @@ public class NotificationController {
 
     @PostMapping("/api/notifications/{userid1}/{userid2}/")
     public ResponseEntity<String> SendFriendRequest(@PathVariable Integer userid1, @PathVariable Integer userid2) {
+        User user1 = userRepository.findById(userid1)
+                .orElseThrow(() -> new RuntimeException("User not found"));
         User user2 = userRepository.findById(userid2)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Notification newNotification = new Notification();
-        newNotification.setMessage(userid1.toString());
+        newNotification.setMessage("userID:" + userid1.toString() + ",userName:" + user1.getUsername().toString());
         newNotification.setType("FRIEND_REQ");
         user2.getNotifications().add(newNotification);
         notificationRepository.save(newNotification);

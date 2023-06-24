@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,10 +72,11 @@ public class FriendController {
         return ResponseEntity.ok(network);
     }
 
-    @GetMapping("/Friends/AddFriend/{userid1}/{userid2}")
+    @PostMapping("/Friends/AddFriend/{userid1}/{userid2}")
     public ResponseEntity<Boolean> addFriends(@PathVariable Integer userid1, @PathVariable Integer userid2) {
         User user1 = userRepository.findById(userid1).orElseThrow();
         User user2 = userRepository.findById(userid2).orElseThrow();
+        if (user1.getFriends().contains(user2)) return ResponseEntity.badRequest().build();
         user1.getFriends().add(user2);
         user2.getFriends().add(user1);
         userRepository.save(user1);

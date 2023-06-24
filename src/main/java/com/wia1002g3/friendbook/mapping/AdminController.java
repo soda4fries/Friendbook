@@ -1,20 +1,25 @@
 package com.wia1002g3.friendbook.mapping;
 
 
+import com.wia1002g3.friendbook.DTOs.PostDTO;
 import com.wia1002g3.friendbook.entity.Post;
 import com.wia1002g3.friendbook.entity.User;
+import com.wia1002g3.friendbook.repository.PostRepository;
 import com.wia1002g3.friendbook.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
 @RequiredArgsConstructor
+@RestController
 public class AdminController {
 
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
     @DeleteMapping("admin/users/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
@@ -32,32 +37,11 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("admin/users/{userId}/posts/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Integer userId, @PathVariable Integer postId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        User user = userOptional.get();
-
-        // Check if the post exists in the user's posts
-        Optional<Post> postOptional = user.getPosts().stream()
-                .filter(post -> post.getId().equals(postId))
-                .findFirst();
-
-        if (postOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Post post = postOptional.get();
-
-        // Delete the post
-        user.getPosts().remove(post);
-        userRepository.save(user);
-
-        return ResponseEntity.noContent().build();
+    @DeleteMapping("admin/DeletePosts/{postId}")
+    public ResponseEntity<Boolean> deletePost(@PathVariable Integer postId) {
+        Post post = postRepository.findById(postId).orElseThrow();
+        postRepository.delete(post);
+        return ResponseEntity.ok(Boolean.TRUE);
     }
 
 }

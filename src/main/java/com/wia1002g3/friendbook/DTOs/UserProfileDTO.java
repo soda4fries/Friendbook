@@ -11,6 +11,7 @@ public class UserProfileDTO {
     private String username;
     private String firstName;
     private String lastName;
+    private String email;
     private String DOB;
     private String address;
     private String phoneNumber;
@@ -19,6 +20,5 @@ public class UserProfileDTO {
     private String hobbies;
     private String relationStatus;
     private String jobExperiance;
-    private String posts;
-
+    private String role;
 }

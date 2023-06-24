@@ -1,5 +1,6 @@
 package com.wia1002g3.friendbook.mapping;
 
+import com.wia1002g3.friendbook.DTOs.ConversationDTO;
 import com.wia1002g3.friendbook.DTOs.CreateGroupRequest;
 import com.wia1002g3.friendbook.DTOs.MessageDTO;
 import com.wia1002g3.friendbook.DTOs.SaveMessageDTO;
@@ -56,16 +57,16 @@ public class MessageController {
     }
 
     @GetMapping("api/messaging/{userId}/conversations")
-    public List<Integer> getUserConversationIds(@PathVariable Integer userId) {
+    public List<ConversationDTO> getUserConversationIds(@PathVariable Integer userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         List<Conversation> conversations = user.getConversations();
-        List<Integer> conversationIds = new ArrayList<>();
+        List<ConversationDTO> conversationDTOs = new ArrayList<>();
 
         for (Conversation conversation : conversations) {
-            conversationIds.add(conversation.getId());
+            conversationDTOs.add(new ConversationDTO(conversation.getId(), conversation.getConversationName()));
         }
 
-        return conversationIds;
+        return conversationDTOs;
     }
 
     @GetMapping("api/messaging/{conversationId}/messages/{page}")

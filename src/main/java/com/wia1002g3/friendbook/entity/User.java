@@ -31,9 +31,12 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
+    @Column(unique=true)
     private String username;
     private String password;
+    @Column(unique=true)
     private String email;
+    @Column(unique=true)
     private String phoneNumber;
 
 

@@ -26,6 +26,7 @@ public class Post implements Comparable<Post>{
     private User poster;
 
     private String caption;
+    @Column(columnDefinition="text")
     private String ImageBase64;
 
     @OneToMany

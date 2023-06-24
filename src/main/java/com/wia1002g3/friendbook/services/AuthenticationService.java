@@ -14,7 +14,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +32,12 @@ public class AuthenticationService {
             User user = userServices.createUser(request);
             String token = jwtService.generateToken(new LinkedHashMap<>(), user);
             System.out.println("did not fail to Generate token");
-            return new AuthenticationResponse(token);
+            return AuthenticationResponse.builder()
+                    .token(token)
+                    .userID(user.getId())
+                    .UserName(user.getUsername())
+                    .Role(user.getRole().name())
+                    .build();
         } catch (RuntimeException e) {
             System.out.println(e.toString());
             throw new RuntimeException("Failed to register user");
@@ -56,8 +63,13 @@ public class AuthenticationService {
         User user = userRepository.findByUsername(userName)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+        user.setViewedPost(new LinkedList<>());
+
         return AuthenticationResponse.builder()
                 .token(jwtService.generateToken(new LinkedHashMap<>(), user))
+                .userID(user.getId())
+                .UserName(user.getUsername())
+                .Role(user.getRole().name())
                 .build();
     }
 }

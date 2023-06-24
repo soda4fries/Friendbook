@@ -5,6 +5,6 @@ import lombok.Data;
 //upload post
 @Data
 public class UploadPostReq {
-    String caption;
-    String Base64image;
+    private String caption;
+    private String base64image;
 }

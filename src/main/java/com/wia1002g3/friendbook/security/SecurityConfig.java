@@ -21,11 +21,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        /* Debug security config
+        //Debug security config
         httpSecurity
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/**", "/static/**", "/admin/**")
+                .requestMatchers("/auth/**", "/static/**", "/admin/**", "**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -35,8 +35,9 @@ public class SecurityConfig {
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-           */
+        return httpSecurity.build();
 
+        /*
         httpSecurity
                 .csrf().disable()
                 .authorizeHttpRequests()
@@ -53,7 +54,7 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
-
+        */
     }
 
 }

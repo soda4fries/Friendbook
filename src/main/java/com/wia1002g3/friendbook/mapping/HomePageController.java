@@ -19,20 +19,26 @@ public class HomePageController {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+    @GetMapping("api/HomePage/GetOnePost/{postID}")
+    public ResponseEntity<PostDTO> getPost(@PathVariable Integer postID) {
+        Post post = postRepository.findById(postID).orElseThrow();
+        PostDTO postDTO = new PostDTO(post.getPoster().getUsername(), post.getId(), post.getCaption(), post.getImageBase64(), post.getLikes(), post.getTimestamp());
+
+        return ResponseEntity.ok(postDTO);
+    }
 
     @GetMapping("api/HomePage/GetHomePost/{userid}")
     public ResponseEntity<ArrayList<PostDTO>> getHomePagePost(@PathVariable("userid") Integer userid) {
         User user = userRepository.findById(userid).orElseThrow();
-        ArrayList<Post> allPost = new ArrayList<>();
+        ArrayList<PostDTO> allPost = new ArrayList<>();
         for (User friend : user.getFriends()) {
-            allPost.addAll(friend.getPosts());
+            for (Post post : friend.getPosts()) {
+                allPost.add(new PostDTO(friend.getUsername(), post.getId(),post.getCaption(),post.getImageBase64(), post.getLikes(),post.getTimestamp()));
+            }
         }
-        ArrayList<PostDTO> posts = new ArrayList<>();
-        for (Post post: allPost) {
-            posts.add(new PostDTO(post.getId(), post.getCaption(), post.getImageBase64(), post.getLikes(), post.getTimestamp()));
-        }
+        Collections.sort(allPost);
 
-        return ResponseEntity.ok(posts);
+        return ResponseEntity.ok(allPost);
     }
 
 
@@ -44,7 +50,7 @@ public class HomePageController {
 
         for(int i = 0; i < user.getPosts().size(); i++) {
             Post post = user.getPosts().get(i);
-            PostDTO postDTO = new PostDTO(post.getId(), post.getCaption(), post.getImageBase64(), post.getLikes(), post.getTimestamp());
+            PostDTO postDTO = new PostDTO(user.getUsername(), post.getId(), post.getCaption(), post.getImageBase64(), post.getLikes(), post.getTimestamp());
             posts.add(postDTO);
         }
         Collections.sort(posts);
@@ -57,7 +63,11 @@ public class HomePageController {
     public ResponseEntity<Boolean> viewedPost(@PathVariable Integer postId, @PathVariable Integer userId) {
         User user = userRepository.findById(userId).orElseThrow();
         List<Integer> viewed = user.getViewedPost();
+        if (viewed == null) {
+            viewed = new LinkedList<>();
+        }
         viewed.add(postId);
+        user.setViewedPost(viewed);
         userRepository.save(user);
         return ResponseEntity.ok(Boolean.TRUE);
     }
@@ -70,25 +80,24 @@ public class HomePageController {
     }
 
     @PostMapping("api/HomePage/UploadPost/{userid}")
-    public boolean uploadPost(@PathVariable Integer userid, @RequestBody UploadPostReq request) {
+    public Integer uploadPost(@PathVariable Integer userid, @RequestBody UploadPostReq request) {
         User user = userRepository.findById(userid).orElseThrow();
         Post post = new Post();
         post.setLikes(new ArrayList<>());
         post.setCaption(request.getCaption());
         post.setImageBase64(request.getBase64image());
         post.setTimestamp(new Date());
-
+        post.setPoster(user);
         user.getPosts().add(post);
         postRepository.save(post);
         userRepository.save(user);
-        return true;
+        return post.getId();
     }
     @PostMapping("api/HomePage/LikePost/{userid}/{postid}")
     public boolean likePost(@PathVariable Integer userid, @PathVariable Integer postid) {
         User user = userRepository.findById(userid).orElseThrow();
         Post post = postRepository.findById(postid).orElseThrow();
         post.getLikes().add(user);
-
         postRepository.save(post);
         return true;
     }

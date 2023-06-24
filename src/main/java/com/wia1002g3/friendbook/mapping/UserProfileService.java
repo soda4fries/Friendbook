@@ -16,6 +16,7 @@ import java.util.Stack;
 @RestController
 @RequiredArgsConstructor
 public class UserProfileService {
+
     private final UserRepository userRepository;
 
     @GetMapping("api/UserProfile/{userId}/getProfile")
@@ -32,6 +33,7 @@ public class UserProfileService {
         userProfileDTO.setUsername(user.getUsername());
         userProfileDTO.setFirstName(user.getFirstName());
         userProfileDTO.setLastName(user.getLastName());
+        userProfileDTO.setEmail(user.getEmail());
         userProfileDTO.setDOB(user.getBirthday());
         userProfileDTO.setAddress(user.getAddress());
         userProfileDTO.setPhoneNumber(user.getPhoneNumber());
@@ -40,7 +42,7 @@ public class UserProfileService {
         userProfileDTO.setHobbies(user.getHobbies().toString());
         userProfileDTO.setRelationStatus(user.getRelationStatus());
         userProfileDTO.setJobExperiance(user.getJobExperiences().toString());
-        userProfileDTO.setPosts(user.getPosts().toString());
+        userProfileDTO.setRole(user.getRole().name());
         return ResponseEntity.ok(userProfileDTO);
     }
 
@@ -50,15 +52,10 @@ public class UserProfileService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // Update the user profile information with the provided values
-        user.setFirstName(updatedUser.getFirstName());
-        user.setLastName(updatedUser.getLastName());
-        user.setBirthday(updatedUser.getDOB());
         user.setAddress(updatedUser.getAddress());
         user.setPhoneNumber(updatedUser.getPhoneNumber());
-        user.setGender(updatedUser.getGender());
         user.setBio(updatedUser.getBio());
         user.setHobbies(updatedUser.getHobbiesAsArrayList());
-        user.setRelationStatus(updatedUser.getRelationStatus());
         // Save the updated user object
         userRepository.save(user);
         return true;
@@ -79,7 +76,7 @@ public class UserProfileService {
         }
 
 
-    @GetMapping("api/UserProfile/hobbylist/")
+    @GetMapping("/auth/api/UserProfile/hobbylist/")
     public ArrayList<String> getHobbylist(){
         ArrayList<String> hobbies = new ArrayList<>();
 

@@ -27,11 +27,13 @@ public class SearchController {
         public String userName;
         public String bio;
         public String fullName;
+        public Integer userID;
 
-        SearchResultDTO(String userName, String bio, String firstName, String lastName) {
+        SearchResultDTO(String userName, String bio, String firstName, String lastName, Integer userID) {
             this.fullName = firstName + " " + lastName;
             this.userName = userName;
             this.bio = bio;
+            this.userID = userID;
         }
 
         @Override
@@ -45,7 +47,7 @@ public class SearchController {
         ArrayList<User> matches = userRepository.findAllByUsernameContainingOrFirstNameContainingOrLastNameContaining(searchterm, searchterm, searchterm);
         ArrayList<SearchResultDTO> Result= new ArrayList<>();
         for (User user : matches) {
-            SearchResultDTO match = new SearchResultDTO(user.getUsername(), user.getBio(), user.getFirstName(), user.getLastName());
+            SearchResultDTO match = new SearchResultDTO(user.getUsername(), user.getBio(), user.getFirstName(), user.getLastName(), user.getId());
             Result.add(match);
         }
 
@@ -53,20 +55,20 @@ public class SearchController {
         return ResponseEntity.ok(Result);
     }
 
-    @PostMapping("api/Search/UserNamePhoneEmail/{searchterm}")
-    public ResponseEntity<ArrayList<SearchResultDTO>> findByUsernameNameContactNumberEmail(@PathVariable String searchterm) {
+    @PostMapping("api/Search/UserNamePhoneEmail/")
+    public ResponseEntity<ArrayList<SearchResultDTO>> findByUsernameNameContactNumberEmail(@RequestBody SearchTermFuzzy request) {
         List<User> users = userRepository.findAll();
         ArrayList<User> matches = new ArrayList<>();
         for (User user : users) {
             String userInfo = user.getUsername() + user.getPhoneNumber() + user.getEmail();
-            if(userInfo.contains(searchterm)) {
+            if(userInfo.contains(request.getSearchterm())) {
                 matches.add(user);
             }
         }
 
         ArrayList<SearchResultDTO> Result= new ArrayList<>();
         for (User user : matches) {
-            SearchResultDTO match = new SearchResultDTO(user.getUsername(), user.getBio(), user.getFirstName(), user.getLastName());
+            SearchResultDTO match = new SearchResultDTO(user.getUsername(), user.getBio(), user.getFirstName(), user.getLastName(), user.getId());
             Result.add(match);
         }
 
@@ -83,7 +85,7 @@ public class SearchController {
         ArrayList<User> matches= userRepository.searchByBio(request.getSearchterm());
         ArrayList<SearchResultDTO> Result= new ArrayList<>();
         for (User user : matches) {
-            SearchResultDTO match = new SearchResultDTO(user.getUsername(), user.getBio(), user.getFirstName(), user.getLastName());
+            SearchResultDTO match = new SearchResultDTO(user.getUsername(), user.getBio(), user.getFirstName(), user.getLastName(), user.getId());
             Result.add(match);
         }
         return ResponseEntity.ok(Result);

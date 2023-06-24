@@ -15,6 +15,7 @@ public class Conversation {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
+    @Column(unique = true)
     private String conversationName;
 
 

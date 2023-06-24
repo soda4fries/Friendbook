@@ -24,6 +24,6 @@ public class RegisterRequest {
     private String hobbies;
     private String jobExperiance;
     private Integer isAdminrole;
-    private String RelationshipStatus;
+    private String relationshipStatus;
 
 }
